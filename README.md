@@ -1,2 +1,2 @@
-# collage-project
+# COLLAGE PROJECT 
 collage project 
