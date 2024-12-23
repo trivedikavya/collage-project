@@ -36,5 +36,5 @@ cd
 pushd
 
 
-::deatils about directory 
+::detail about directory 
 dir
