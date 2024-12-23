@@ -69,7 +69,7 @@ def main():
             print("Unfortunately, you are not eligible for the loan at this time.")
     else:
         print("Could not evaluate loan eligibility due to invalid input.")
-#this project is of kavya trivedi
+#this project is of kavya trivedi .
 
 if __name__ == "__main__":
     main()
