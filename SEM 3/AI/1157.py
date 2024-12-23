@@ -1,4 +1,4 @@
-# Automated Loan Eligibility Predictor AI PROJECT of KAVYA TRIVEDI (3rd sem JG UNI)
+# Automated Loan Eligibility Predictor AI PROJECT of KAVYA TRIVEDI (3rd sem JG UNI) .
 #Name:- KAVYA TRIVEDI
 #ROLL-NO:-1157 
 #this project is of kavya trivedi
