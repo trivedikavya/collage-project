@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chatbot with reactjs</title>
+
+    <!-- links for font  google font icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0 ,0" />
+
+  </head>
+  <body>
+    
+
+    <div class="infoofkavya" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #6D4FC2, #1e1e1e); color: white; font-family: 'Arial', sans-serif; overflow: hidden;">
+      <div class="centerrr" style="text-align: center; animation: fadeIn 3s ease-in-out; position: relative;">
+        <h3 style="font-size: 2rem; animation: slideIn 1.5s ease-out; color: #ddd;">HERE IS THE</h3>
+        <br>
+        <h2 style="font-size: 2.5rem; animation: scaleUp 2s ease-in-out; color: #f39c12;">PROJECT OF AI</h2>
+        <br>
+        <h1 style="font-size: 3.5rem; animation: typeWriter 4s steps(30, end) 1s forwards; white-space: nowrap; overflow: hidden; border-right: 2px solid #fff;">MADE BY KAVYA TRIVEDI</h1>
+        <br>
+        <h5 style="font-size: 1.5rem; color: #95a5a6; animation: fadeInText 5s ease-in-out;">USING reactjs AND CSS</h5>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    
+      @keyframes slideIn {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    
+      @keyframes scaleUp {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    
+      @keyframes typeWriter {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+    
+      @keyframes fadeInText {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+    
+
+
+
+
+
+
+
+
+
+
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
