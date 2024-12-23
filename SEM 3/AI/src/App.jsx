@@ -1,3 +1,6 @@
+//IT IS THE PROJECT OS AI
+//Name:- Kavya Trivedi
+// Roll NO:- 1157
 import { useEffect, useRef, useState } from "react";
 import ChatbotIcon from "./components/ChatbotIcon";
 import ChatForm from "./components/ChatForm";
