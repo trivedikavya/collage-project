@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File and Folder Operations in CMD | KAVYA TRIVEDI CN 1157</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #444;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #d63384;
+        }
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File and Folder Operations in CMD</h1>
+
+        <div class="section">
+            <h2>1. AIM</h2>
+            <p>To perform basic file and folder operations like creating, deleting, renaming, moving, adding content, and deleting content using Command Prompt.</p>
+        </div>
+
+        <div class="section">
+            <h2>2. THEORY</h2>
+            <p>The Command Prompt (CMD) is a command-line interpreter in the Windows operating system. It allows users to execute commands to perform various tasks, including managing files and directories. Common commands used for file and folder operations include:</p>
+            <ul>
+                <li><code>mkdir</code>: To create folders</li>
+                <li><code>del</code>: To delete files</li>
+                <li><code>rmdir</code>: To delete folders</li>
+                <li><code>rename</code>: To rename files or folders</li>
+                <li><code>move</code>: To move files or folders</li>
+                <li><code>echo</code>: To add content to files</li>
+                
+            </ul>
+            <p>These commands are integral for automating tasks, managing file systems, and enhancing productivity.</p>
+        </div>
+
+        <div class="section">
+            <h2>3. PROCEDURE</h2>
+            <ol>
+                <li><strong>Create a Folder:</strong>
+                    <pre>mkdir leo</pre>
+                </li>
+                <li><strong>Create a File:</strong>
+                    <pre>echo. > leo.txt</pre>
+                </li>
+                <li><strong>Add Content to the File:</strong>
+                    <pre>echo Kavya Trivedi is legend > leo.txt</pre>
+                </li>
+                <li><strong>Delete Content from the File:</strong>
+                    <pre>echo. > leo.txt</pre>
+                </li>
+                <li><strong>Rename the File:</strong>
+                    <pre>rename leo.txt kavyaleo.txt</pre>
+                </li>
+                <li><strong>Move the File:</strong>
+                    <pre>kavyaleo.txt move c::\user\kavya\kavyatrivedi</pre>
+                </li>
+                <li><strong>Delete the File:</strong>
+                    <pre>del kavyaleo.txt</pre>
+                </li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>4. CODE</h2>
+            <pre>
+                :: IT IS IS THE CMD CODE OF COMPUTER NETWORK PROJECT 
+                ::NAME:  KAVYA TRIVEDI
+                ::ROLL-NO: 1157
+                
+                :: Create a folder
+                mkdir leo
+                
+                :: to change path 
+                cd leo
+                
+                :: Create a file
+                echo. > leo.txt
+                
+                :: Add content
+                echo Kavya Trivedi is legend > leo.txt
+                
+                :: Delete content
+                echo. > leo.txt
+                
+                :: Rename the file
+                rename leo.txt kavyaleo.txt
+                
+                :: Move the file
+                kavyaleo.txt move c::\user\kavya\kavyatrivedi
+                
+                :: Delete the file
+                del kavyaleo.txt
+                
+            
+            </pre>
+        </div>
+
+        <div class="section">
+            <h2>5. RESULT</h2>
+            <p>The following operations were performed successfully:</p>
+            <ul>
+                <li>A folder named <code>leo</code> was created.</li>
+                <li>A file <code>leo.txt</code> was created in the folder.</li>
+                <li>Content "Kavya Trivedi is legend" was added to the file.</li>
+                <li>The content of the file was cleared.</li>
+                <li>The file was renamed to <code>kavyaleo.txt</code>.</li>
+                <li>The file was moved to the folder <code>Kavya Trivedi</code>.</li>
+                <li>The file was deleted successfully.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. CONCLUSION</h2>
+            <p>This project of kavya trivedi demonstrates how to use Command Prompt for basic file and folder operations. The commands covered include creating, deleting, renaming, moving, and editing files and directories. These operations are essential for effective file system management and can also be automated for repeated tasks.</p>
+        </div>
+    </div>
+</body>
+</html>

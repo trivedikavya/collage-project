@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Payment Page</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .payment-section {
+            display: flex;
+            gap: 20px;
+        }
+
+        .payment-form {
+            flex: 3;
+        }
+
+        .qr-container {
+            flex: 1;
+            text-align: center;
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .qr-container p {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .inputBox {
+            margin-bottom: 20px;
+        }
+
+        .inputBox label {
+            font-size: 1rem;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .inputBox input,
+        .inputBox select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .flex {
+            display: flex;
+            gap: 20px;
+        }
+
+        .flex .inputBox {
+            flex: 1;
+        }
+
+        .or-text {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #888;
+            margin: 20px 0;
+        }
+
+        .submit_btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit_btn:hover {
+            background: #45a049;
+        }
+
+        
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .payment-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="#">
+            <div class="payment-section">
+                <!-- Left Payment Form -->
+                <div class="payment-form">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="title">Billing Address</h3>
+                            <div class="inputBox">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="email">Email:</label>
+                                <input type="text" id="email" placeholder="Enter email address" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="address">Address:</label>
+                                <input type="text" id="address" placeholder="Enter address" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" placeholder="Enter city" required>
+                            </div>
+                            <div class="flex">
+                                <div class="inputBox">
+                                    <label for="state">State:</label>
+                                    <input type="text" id="state" placeholder="Enter state" required>
+                                </div>
+                                <div class="inputBox">
+                                    <label for="zip">Zip Code:</label>
+                                    <input type="number" id="zip" placeholder="123 456" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h3 class="title">Payment</h3>
+                            <div class="inputBox">
+                                <label for="cardName">Name On Card:</label>
+                                <input type="text" id="cardName" placeholder="Enter card name" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="cardNum">Credit Card Number:</label>
+                                <input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="">Exp Month:</label>
+                                <select name="" id="">
+                                    <option value="">Choose month</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
+                            </div>
+                            <div class="flex">
+                                <div class="inputBox">
+                                    <label for="">Exp Year:</label>
+                                    <select name="" id="">
+                                        <option value="">Choose Year</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                                <div class="inputBox">
+                                    <label for="cvv">CVV</label>
+                                    <input type="number" id="cvv" placeholder="1234" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Proceed to Checkout" class="submit_btn">
+                </div>
+
+                <!-- Right QR Code -->
+                <div class="qr-container">
+                    <h3>OR BY QR</h3>
+                    <img src="qrrr.jpeg" alt="QR Code">
+                    <p>IF YOU CAN TAKE RISK PAY HERE</p>
+                    <p class="tandc" > Terms and Condition pay at your own risk refund systeam is not applicable here. </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

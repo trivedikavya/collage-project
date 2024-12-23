@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+<link rel="stylesheet" href="login.css">
+  
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login</h1>
+    <!-- Social Login Buttons -->
+    <button class="google-btn" onclick="redirectToMain()">Sign in with Google</button>
+    <button class="github-btn" onclick="redirectToMain()">Sign in with GitHub</button>
+
+    <!-- Username and Password Fields -->
+    <input type="text" id="username" placeholder="Username or Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <!-- CAPTCHA Section -->
+    <div class="captcha-container">
+      <canvas id="captcha-canvas" width="300" height="100"></canvas>
+      <input type="text" id="captcha-input" placeholder="Enter CAPTCHA">
+    </div>
+
+    <!-- Login Button -->
+    <button id="login-btn" onclick="verifyCaptcha()">Login</button>
+
+    <p id="result"></p>
+  </div>
+
+  
+</body>
+<script src="login.js"></script>
+</html>

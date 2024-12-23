@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spliterz </title>
+    <style>
+        /* General Reset kavya trivedi*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling  kavya trivedi*/
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: #F2F2F2;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background-color: #59009d;
+            color: #fff;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .navbar-left,
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .demo{
+            margin-left: 450px;
+        }
+
+        #customer-care {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #customer-care:hover {
+            background-color: #666;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+
+
+        /* between space  kavya trivedi */
+
+        #kavya{
+            gap: 35px;
+        }
+
+
+
+
+        #dark-mode-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            
+        }
+
+        #dark-mode-button:hover {
+            background-color: #666;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+        .scrolling-text {
+            display: inline-block;
+            position: absolute;
+            left: 100%;
+            animation: scrollText 20s linear infinite;
+            font-size: 1rem;
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Main Section kavya  trivedi */
+        main {
+            display: flex;
+            margin-left: 280px;
+            align-items: center;
+            flex-grow: 1;
+            padding: 2rem;
+        }
+
+        /* Left Section */
+        .text-container {
+            max-width: 60%;
+        }
+
+        main h1 {
+            font-size: 4rem;
+            color: #540579;
+            margin-bottom: 1rem;
+        }
+
+        main p {
+            font-size: 1.5rem;
+            color: #777;
+            margin-bottom: 2rem;
+        }
+
+        #login-button {
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+           
+        }
+
+        #login-button:hover {
+            background-color: #6d0786;
+            box-shadow: 0 0 10px rgb(0, 0, 0);
+        }
+
+        /* Right Section - 3D Cube Animation by kavya trivedi */
+        .animation-container {
+            width: 70%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 800px;
+        }
+
+        .imagekavya{
+            height: 1px;
+            width: 10px;
+           
+            
+        }
+
+        /* cube and div pachi z y x nu setting for cube by kavya trivedi */
+        .cube {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 5s infinite linear;
+        }
+
+        .cube div {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(84, 5, 121, 0.8);
+            border: 2px solid #ffffffd0;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+        .front {
+            transform: translateZ(75px);
+        }
+
+        .back {
+            transform: rotateY(180deg) translateZ(75px);
+        }
+
+        .right {
+            transform: rotateY(90deg) translateZ(75px);
+        }
+
+        .left {
+            transform: rotateY(-90deg) translateZ(75px);
+        }
+
+        .top {
+            transform: rotateX(90deg) translateZ(75px);
+        }
+
+        .bottom {
+            transform: rotateX(-90deg) translateZ(75px);
+        }
+
+        @keyframes rotateCube {
+            0% {
+                transform: rotateX(0) rotateY(0);
+            }
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+       
+
+          /* Footer by kavya */
+          footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #59009d;
+            color: #ffffff;
+            flex-wrap: wrap;
+        }
+
+        footer .description {
+            font-size: 0.9rem;
+            max-width: 60%;
+            margin-bottom: 0.5rem;
+        }
+
+        footer .about-us {
+            text-align: right;
+        }
+
+        #about-us-button {
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #about-us-button:hover {
+            background-color: #555;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #000000;
+            color: #ddd;
+        }
+
+        body.dark-mode .navbar {
+            background-color: #503169;
+        }
+
+        body.dark-mode .footer {
+            background-color: #503169;
+            color: white;
+        }
+
+        
+        body.dark-mode #about-us-button,
+        body.dark-mode #customer-care,
+        body.dark-mode #dark-mode-button {
+            background-color: #1e0227;
+            color: #fff;
+        }
+
+        body.dark-mode #login-button{
+            background-color: #59009d;
+        }
+
+        body.dark-mode #login-button:hover,
+        body.dark-mode #about-us-button:hover,
+        body.dark-mode #customer-care:hover,
+        body.dark-mode #dark-mode-button:hover {
+            background-color: #817e7e;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+          /* Responsive Design */
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        main {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .text-container h1 {
+            font-size: 2.5rem;
+        }
+
+        .text-container p {
+            font-size: 1rem;
+        }
+
+        .animation-container {
+            height: 200px;
+        }
+
+        .cube {
+            width: 100px;
+            height: 100px;
+        }
+
+        footer {
+            flex-direction: column;
+        }
+
+        footer .description,
+        footer .about-us {
+            flex: none;
+            margin-bottom: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .text-container h1 {
+            font-size: 2rem;
+        }
+
+        .text-container p {
+            font-size: 0.9rem;
+        }
+
+        .cube {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar"  class="navbar-right">
+        
+
+        <div class="navbar-right"> 
+            <img src="eglogo1.jpg"  alt="" style="height: 50px;" >
+
+         
+        </div>
+        <div class="navbar-left" id="kavya">
+            <!-- <button id="dark-mode-button">Dark Mode</button> -->
+        </div>
+        <div class="navbar-right" id="kavya">
+            <a href="/kavyatrivedi/demopage/demo2.html"> <button  id="customer-care" class="demo" style="width: 140px;" >Demo of website</button> </a>
+            <button id="dark-mode-button" style="width: 120px;">Dark Mode</button>
+            <a href="/vraj/service.html"> <button id="customer-care" >Service</button> </a>
+            <a href="/kavyatrivedi/contactuspage/contact.html"> <button id="customer-care" >Contact us</button> </a>
+        </div>
+        
+    </div>
+
+    <!-- Main Section -->
+    <main>
+        <div class="text-container">
+            <h1>SPLITERZ</h1>
+            <p>Split bills, not friends</p>
+            <a href="/kavyatrivedi/loginpage/login.html">  <button id="login-button" >  Login</button>  </a>
+        </div>
+        <div class="animation-container">
+            <div class="cube">
+                <div class="front"></div>
+                <div class="back"></div>
+                <div class="right"></div>
+                <div class="left"></div>
+                <div class="top"></div>
+                <div class="bottom"></div>
+            </div>
+        </div>
+    </main>
+
+     <!-- Footer Section -->
+     <footer class="footer">
+        <div class="description">
+            <p>Spliterz helps you easily split bills with friends, ensuring no more awkward calculations.</p>
+        </div>
+        <div class="about-us">
+             <a href="/yashraj/aboutus.html"></a> <button id="about-us-button">About Us</button>
+        </div>
+    </footer>
+
+    <script>
+        const darkModeButton = document.getElementById('dark-mode-button');
+        darkModeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            darkModeButton.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+        });
+    </script>
+
+</body>
+</html>

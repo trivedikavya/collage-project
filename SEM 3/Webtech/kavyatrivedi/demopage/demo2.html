@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo of spliterz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/2a3ecd6589.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Markazi+Text&display=swap");
+    @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Markazi Text", Muli;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #444443;
+        height: 100vh;
+        width: 100%;
+        text-transform: capitalize;
+    }
+
+    .box {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        height: 450px;
+        width: 350px;
+        background-color: white;
+        box-shadow: 0 40px 40px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .box h3 {
+        font-family: cursive;
+        font-size: 2rem;
+        color: #540579;
+    }
+
+    .box p {
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .box span {
+        font-weight: bold;
+        font-size: 2rem;
+    }
+
+    .box .inputbox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .box .inputbox i {
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+
+    .box input {
+        outline: none;
+        border: none;
+        border-bottom: 2px solid black;
+        text-transform: capitalize;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .box button {
+        border-radius: 18px;
+        padding: 10px 20px;
+        background-color: #540579;
+        font-weight: 600;
+        color: white;
+        outline: none;
+        border: none;
+        width: 30%;
+        cursor: pointer;
+    }
+
+    .box button:hover {
+        background-color: #540579;
+        opacity: 0.8;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        
+    }
+
+    .popup h2 {
+        font-size: 1.5rem;
+        color: #540579;
+    }
+
+    
+
+    .popup button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #540579;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .popup button:hover {
+        opacity: 0.9;
+    }
+
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+</style>
+
+<body>
+    <div class="box">
+        <h3>Bill Splitter</h3>
+        <p>Cost per person is</p>
+        <span id="result">-</span>
+
+        <div class="inputbox">
+            <i class="fa fa-inr"></i>
+            <input id="amount" type="number" value="" placeholder="Please enter total amount">
+        </div>
+
+        <div class="inputbox">
+            <i class="fa fa-users"></i>
+            <input id="people" type="number" value="" placeholder="Total person">
+        </div>
+
+        <button onclick="calculateBill()">Calculate</button>
+        <button style="width: 170px;" onclick="downloadBill()">Download Bill</button>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup" id="popup">
+        <h2>Credit Limit Reached</h2>
+        <p style="font-weight: 200;">You have reached your credit limit. Please login to access more features!</p>
+        <button  onclick="redirectToLogin()">Login</button>
+    </div>
+
+    <script>
+        let credits = 3;
+
+        function calculateBill() {
+            if (credits > 0) {
+                const amount = document.getElementById('amount').value;
+                const people = document.getElementById('people').value;
+                const result = amount / people;
+
+                if (amount && people && people > 0) {
+                    document.getElementById('result').innerHTML = result.toFixed(2);
+                    credits--;
+                    if (credits === 0) {
+                        showPopup();
+                    }
+                } else {
+                    alert('Please enter valid values.');
+                }
+            } else {
+                showPopup();
+            }
+        }
+
+        function showPopup() {
+            document.getElementById('popup-overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function redirectToLogin() {
+            window.location.href = "login.html";
+        }
+
+        function downloadBill() {
+            const amount = document.getElementById('amount').value;
+            const people = document.getElementById('people').value;
+            const result = document.getElementById('result').innerHTML;
+
+            if (!amount || !people || !result || result === '-') {
+                alert('Please calculate the bill first.');
+                return;
+            }
+
+            const billDetails = `Total Amount: $${amount}\nTotal People: ${people}\nCost per Person: $${result}`;
+            const blob = new Blob([billDetails], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "BillDetails.txt";
+            link.click();
+        }
+    </script>
+</body>
+
+</html>
