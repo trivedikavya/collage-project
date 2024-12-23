@@ -1,4 +1,4 @@
-//IT IS THE PROJECT OS AI
+//IT IS THE PROJECT OF AI
 //Name:- Kavya Trivedi
 // Roll NO:- 1157
 import { useEffect, useRef, useState } from "react";
