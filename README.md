@@ -40,7 +40,7 @@ Unfortunately, you are not eligible for the loan at this time.
 ```
 
 ### OS:-
-<img  src="SEM 3/cn-kavya-op.png"> </img>
+<img  src="SEM 3/osop.png"> </img>
 
 ### CN:-
 <img  src="SEM 3/cn-kavya-op.png"> </img>
