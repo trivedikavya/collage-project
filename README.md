@@ -39,9 +39,9 @@ Unfortunately, you are not eligible for the loan at this time.
 
 ```
 
-### OS:-
+### OS:- ALL CMD COMMANDS OUTPUT ARE HERE
 <img  src="SEM 3/osop.png"> </img>
 
-### CN:-
+### CN:- AS HOST & PORT MATCHS WITH THIS WEB-PAGE
 <img  src="SEM 3/cn-kavya-op.png"> </img>
 
