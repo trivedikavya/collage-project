@@ -1,5 +1,5 @@
 # COLLAGE PROJECT 
-## SEM-3:-
+## SEM-3 
 ### AI:-
 
 <img src="SEM 3/chatbot1st.png"> </img>
