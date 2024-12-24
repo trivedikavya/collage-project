@@ -2,7 +2,7 @@
 ## SEM-3:-
 ### AI:-
 
-<img src="sem 3/chatbot1st.png"> </img>
+<img src="SEM3/chatbot1st.png"> </img>
 ```python
 INPUTS:- 
 Welcome to Loan Eligibility Predictor of Kavya Trivedi!
