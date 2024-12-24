@@ -35,7 +35,7 @@ Unfortunately, you are not eligible for the loan at this time.
 
 
 ```
-
+<p>& CHAT-BOT API BASE  </p>
 <img src="SEM 3/chatbot1st.png"> </img>
 <img src="SEM 3/chatbot2nd.png"> </img>
 <img src="SEM 3/chatbot3rd.png"> </img>
