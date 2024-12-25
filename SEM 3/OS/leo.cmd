@@ -32,7 +32,7 @@ rmdir leo
 
 :: Some commands which I used in this Computer Network project
 
-::to change path in current dir
+::to change path in current directory
 cd
 
 ::to change the current directory
