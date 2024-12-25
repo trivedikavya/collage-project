@@ -27,7 +27,7 @@ kavyaleo.txt move c::\user\kavya\kavyatrivedi
 :: Delete the file
 del kavyaleo.txt
 
-:: delete the folder 
+:: Delete the folder 
 rmdir leo
 
 :: Some commands which i used in this cn project
