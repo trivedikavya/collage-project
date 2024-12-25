@@ -30,7 +30,7 @@ del kavyaleo.txt
 :: Delete the folder 
 rmdir leo
 
-:: Some commands which i used in this Computer Network project
+:: Some commands which I used in this Computer Network project
 
 ::to change path in current dir
 cd
