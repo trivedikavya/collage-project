@@ -1,5 +1,5 @@
 # COLLAGE PROJECT 
-# Current Sem Outputs will be found here 
+# Current Sem Outputs will be found here .
 ## SEM-3 
 ### AI:-
 
