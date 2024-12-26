@@ -52,7 +52,7 @@ const canvas = document.getElementById('captcha-canvas');
         result.style.color = 'red';
         return;
       }
-
+// develop by kavya trivedi
       if (userInput === captchaText) {
         result.textContent = 'CAPTCHA verified successfully!';
         result.style.color = 'green';
