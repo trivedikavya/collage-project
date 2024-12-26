@@ -29,7 +29,7 @@ const canvas = document.getElementById('captcha-canvas');
         ctx.fillText(captchaText[i], 0, 0);
         ctx.restore();
       }
-
+// develop by kavya trivedi
       // Add random lines for extra distortion
       for (let i = 0; i < 3; i++) {
         ctx.beginPath();
