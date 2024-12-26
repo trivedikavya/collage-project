@@ -15,7 +15,7 @@ const canvas = document.getElementById('captcha-canvas');
       // Add background color
       ctx.fillStyle = '#add8e6'; // Light blue
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+// develop by kavya trivedi
       // Draw the text with distortion
       ctx.font = '30px Arial';
       ctx.fillStyle = '#000080'; // Dark blue
