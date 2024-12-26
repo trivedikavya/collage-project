@@ -65,7 +65,7 @@ const canvas = document.getElementById('captcha-canvas');
         generateCaptcha(); // Regenerate CAPTCHA on failure
       }
     }
-
+// develop by kavya trivedi
     function redirectToMain() {
       window.location.href = '/jeet/mainpage/mainpage.html'; // Redirect to main.html
     }
