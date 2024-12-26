@@ -5,7 +5,7 @@ const canvas = document.getElementById('captcha-canvas');
     function generateCaptcha() {
       // Clear previous CAPTCHA
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+// develop by kavya trivedi
       // Generate random text (6 characters: letters and numbers)
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       captchaText = Array.from({ length: 6 })
