@@ -73,7 +73,7 @@ input[type="text"], input[type="password"] {
   color: white;
   transition: background-color 0.3s;
 }
-
+  /* code develop by kavya trivedi*/
 #login-btn:hover {
   background-color: #1b1a1a;
   box-shadow: 1px 2px 3px #130606;
