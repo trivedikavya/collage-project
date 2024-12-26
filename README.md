@@ -1,5 +1,5 @@
 # COLLAGE PROJECT 
-[![](https://visitcount.itsvg.in/api?id=trivedikavya&label=view&color=12&icon=8&pretty=false)](https://visitcount.itsvg.in)
+[![](https://visitcount.itsvg.in/api?id=trivedikavya&label=views&color=12&icon=8&pretty=false)](https://visitcount.itsvg.in)
 # Current Sem Outputs will be found here .
 ## SEM-3 
 ### AI:-
