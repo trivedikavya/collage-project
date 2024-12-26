@@ -40,7 +40,7 @@ const canvas = document.getElementById('captcha-canvas');
         ctx.stroke();
       }
     }
-
+// develop by kavya trivedi
     function verifyCaptcha() {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
