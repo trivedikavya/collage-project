@@ -41,7 +41,8 @@ Unfortunately, you are not eligible for the loan at this time.
 <img src="SEM 3/chatbot1st.png"> </img>
 <img src="SEM 3/chatbot2nd.png"> </img>
 <img src="SEM 3/chatbot3rd.png"> </img>
-
+> [!NOTE]\
+> You Have to Preinstall nodejs , react vs code extension 
 
 ### OS:- ALL CMD COMMANDS OUTPUT ARE HERE
 <img  src="SEM 3/osop.png"> </img>
