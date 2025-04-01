@@ -1,7 +1,7 @@
 
 [![](https://visitcount.itsvg.in/api?id=trivedikavya&label=views&color=12&icon=8&pretty=false)](https://visitcount.itsvg.in)
 # Current Sem Outputs will be found here .
-## SEM-4(UI/UX & DT):-
+## SEM-4(UI/UX & DT):--
 <img src="Sem 4/hlm.png" alt="Home page">
 <img src="Sem 4/screencapture-127-0-0-1-3000-v0-gen-i-html-2025-03-24-11_18_03.png" alt="L Home page">
 <img src="Sem 4/screencapture-127-0-0-1-3000-After-login-g-html-2025-03-29-00_26_43.png" alt="L After login page">
