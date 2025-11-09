@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Tutorial with Videos</title>
+  <style>
+    /* General Styles */
+
+    .circle {
+  height: 24px;
+  width: 24px;
+  border-radius: 24px;
+  background-color: black;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999999; /* so that it stays on top of all other elements */
+}
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh; 
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #101611;
+      color: white;
+    }
+
+    body.light {
+      background-color: white;
+      color: black;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: #282c34;
+      padding: 10px 0;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar ul li {
+      position: relative;
+    }
+
+    .navbar ul li a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .navbar ul li a:hover,
+    .navbar ul li a.active {
+      background-color: #6efb61;
+    }
+
+    .navbar ul li ul {
+      display: none;
+      position: absolute;
+      background-color: #282c34;
+      list-style: none;
+      padding: 0;
+    }
+
+    .navbar ul li:hover ul {
+      display: block;
+    }
+
+    .navbar ul li ul li a {
+      padding: 10px 15px;
+    }
+
+
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: none;
+      background-color: #282c34;
+      color: white;
+      padding: 10px 20px;
+      font-size: 24px;
+      cursor: pointer;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .hamburger:hover {
+      background-color: #6efb61;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      
+      width: 250px;
+      background-color: #101611;
+      color: white;
+      padding: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar nav ul li {
+      margin: 10px 0;
+    }
+
+    .sidebar nav ul li a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.active {
+      background-color: #73fb61;
+    }
+
+    /* Main Content */
+    .content {
+      
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .content section {
+      display: none;
+    }
+
+    .content section.active {
+      display: block;
+    }
+
+
+
+
+   
+
+
+    /* Video Styling */
+    video {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    /* Documentation Below Video */
+    .description {
+      font-size: 16px;
+      color: #333;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    /* Video Navigation Buttons */
+    .nav-btn {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 1px 5px;
+      cursor: pointer;
+      font-size: 30px;
+      /* border-radius: 50%; */
+      z-index: 1000;
+    }
+
+    .nav-btn.left {
+      left: 310px;
+    }
+
+    .nav-btn.right {
+      right: 28px;
+    }
+
+    .nav-btn:hover {
+      background: #73fb61;
+    }
+
+
+
+
+    .video-container:hover .nav-btn {
+      display: block;
+    }
+
+
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: #282c34;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 1001;
+      font-size: 18px;
+    }
+
+    .theme-toggle:hover {
+      background: #73fb61;
+    }
+
+
+    
+
+
+
+
+  </style>
+</head>
+
+
+
+<body class="dark">
+
+  
+
+  <button id="themeToggle" class="theme-toggle">🌙</button>
+  <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>HTML Tutorial</h2>
+      <nav>
+        <ul>
+          <li><a onclick="showContent('intro')" class="active">Introduction</a></li>
+          <li><a onclick="showContent('basics')">HTML Basics</a></li>
+          <li><a onclick="showContent('elements')">HTML Elements</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="content">
+      <section id="intro" class="active">
+        <h1>Introduction to HTML</h1>
+
+
+        <div class="video-container">
+        <video controls controlsList="nodownload" oncontextmenu="return false;">
+          <source src="videos/intro.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <button class="nav-btn left" onclick="showPrevious()"><</button>
+        <button class="nav-btn right" onclick="showNext()">></button>
+      </div>
+
+
+
+        <div class="description">
+          <p>lorem500 hello</p>
+        
+        </div>
+      </section>
+
+      
+      <section id="basics">
+        <h1>HTML Basics</h1>
+
+
+
+        <div class="video-container">
+        <video controls controlsList="nodownload" oncontextmenu="return false;">
+          <source src="videos/basics.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <button class="nav-btn left" onclick="showPrevious()"><</button>
+        <button class="nav-btn right" onclick="showNext()">></button>
+      </div>
+
+
+
+
+        <div class="description">
+          <p>In this video, learn the basic structure of an HTML document.</p>
+        </div>
+      </section>
+      <section id="elements">
+        <h1>HTML Elements</h1>
+
+
+
+      <div class="video-container">
+        <video controls controlsList="nodownload" oncontextmenu="return false;">
+          <source src="videos/elements.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <button class="nav-btn left" onclick="showPrevious()"><</button>
+        <button class="nav-btn right" onclick="showNext()">></button>
+      </div>
+
+
+
+
+        <div class="description">
+          <p>This video explains what HTML elements are, their syntax, and how to nest elements properly.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    function showContent(sectionId) {
+      const sections = document.querySelectorAll('.content section');
+      sections.forEach(section => section.classList.remove('active'));
+      const targetSection = document.getElementById(sectionId);
+      targetSection.classList.add('active');
+      const links = document.querySelectorAll('.sidebar nav ul li a');
+      links.forEach(link => link.classList.remove('active'));
+      const activeLink = [...links].find(link => link.textContent.trim() === targetSection.querySelector('h1').textContent.trim());
+      if (activeLink) activeLink.classList.add('active');
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", function () {
+      document.body.classList.toggle("dark");
+      document.body.classList.toggle("light");
+      this.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
+    });
+
+    function showPrevious() {
+      const activeSection = document.querySelector("section.active");
+      const previousSection = activeSection.previousElementSibling;
+      if (previousSection && previousSection.tagName === "SECTION") {
+        activeSection.classList.remove("active");
+        previousSection.classList.add("active");
+      }
+    }
+
+    function showNext() {
+      const activeSection = document.querySelector("section.active");
+      const nextSection = activeSection.nextElementSibling;
+      if (nextSection && nextSection.tagName === "SECTION") {
+        activeSection.classList.remove("active");
+        nextSection.classList.add("active");
+      }
+    }
+
+
+    const coords = { x: 0, y: 0 };
+const circles = document.querySelectorAll(".circle");
+
+const colors = [
+    "#b4f8c8", // Light green
+    "#a0eec0",
+    "#8be5b8",
+    "#75dcb0",
+    "#ffffff", // White
+    "#f5f5f5",
+    "#e0e0e0",
+    "#000000", // Black
+    "#1a1a1a",
+    "#333333"
+    
+];
+
+
+circles.forEach(function (circle, index) {
+  circle.x = 0;
+  circle.y = 0;
+  circle.style.backgroundColor = colors[index % colors.length];
+});
+
+window.addEventListener("mousemove", function(e){
+  coords.x = e.clientX;
+  coords.y = e.clientY;
+  
+});
+
+function animateCircles() {
+  
+  let x = coords.x;
+  let y = coords.y;
+  
+  circles.forEach(function (circle, index) {
+    circle.style.left = x - 12 + "px";
+    circle.style.top = y - 12 + "px";
+    
+    circle.style.scale = (circles.length - index) / circles.length;
+    
+    circle.x = x;
+    circle.y = y;
+
+    const nextCircle = circles[index + 1] || circles[0];
+    x += (nextCircle.x - x) * 0.3;
+    y += (nextCircle.y - y) * 0.3;
+  });
+ 
+  requestAnimationFrame(animateCircles);
+}
+
+animateCircles();
+
+  </script>
+</body>
+</html>

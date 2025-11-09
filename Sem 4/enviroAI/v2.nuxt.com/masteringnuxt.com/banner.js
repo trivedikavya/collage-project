@@ -1,0 +1,1 @@
+No Content: https://masteringnuxt.com/banner.js?affiliate=nuxt&type=top

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Learning Roadmap</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+
+/* General styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* Roadmap container */
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Space between rows */
+  align-items: center;
+}
+
+/* Row styles */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Reverse row layout for zigzag */
+.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Rectangle (details) styles */
+.rectangle {
+  width: 180px;
+  height: auto;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.rectangle summary {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.rectangle p {
+  margin: 0;
+  padding: 10px;
+  background-color: #388e3c;
+  color: #fff;
+}
+
+/* Right arrow styles */
+.arrow {
+  width: 60px;
+  height: 2px;
+  background-color: #333;
+  position: relative;
+  animation: arrow-slide 2s infinite ease-in-out; /* Arrow animation */
+}
+
+.arrow.right::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid #333;
+}
+
+/* Left arrow styles */
+.arrow.left::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -10px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 10px solid #333;
+}
+
+/* Down Arrow styles */
+.down-arrow {
+  width: 2px;
+  height: 30px;
+  background-color: #333;
+  position: relative;
+  animation: arrow-slide 2s infinite ease-in-out; /* Arrow animation */
+}
+
+.down-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: -5px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid #333;
+}
+
+/* Arrow animation */
+@keyframes arrow-slide {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .reverse {
+    flex-direction: column-reverse;
+  }
+
+  .arrow {
+    transform: rotate(90deg); /* Adjust arrows for vertical layout */
+  }
+}
+
+
+</style>
+<body>
+  <div class="roadmap">
+    <!-- First Row -->
+    <div class="row">
+      <details class="rectangle">
+        <summary>Basic Mathematics</summary>
+        <p>Learn linear algebra, calculus, probability, and statistics. These are foundational skills for AI algorithms.</p>
+      </details>
+      <div class="arrow right"></div>
+      <details class="rectangle">
+        <summary>Programming</summary>
+        <p>Learn Python, a beginner-friendly language widely used in AI, along with libraries like NumPy and pandas.</p>
+      </details>
+    </div>
+    <!-- Down Arrow -->
+    <div class="down-arrow"></div>
+    <!-- Second Row -->
+    <div class="row reverse">
+      <details class="rectangle">
+        <summary>Data Handling</summary>
+        <p>Learn how to process, clean, and analyze data using tools like Pandas, SQL, and Jupyter Notebook.</p>
+      </details>
+      <div class="arrow left"></div>
+      <details class="rectangle">
+        <summary>Problem Solving</summary>
+        <p>Practice algorithms and data structures to improve problem-solving and logical thinking.</p>
+      </details>
+    </div>
+    <!-- Down Arrow -->
+    <div class="down-arrow"></div>
+    <!-- Third Row -->
+    <div class="row">
+      <details class="rectangle">
+        <summary>ML Basics</summary>
+        <p>Understand machine learning concepts like supervised learning, unsupervised learning, and basic algorithms.</p>
+      </details>
+      <div class="arrow right"></div>
+      <details class="rectangle">
+        <summary>Logical Thinking</summary>
+        <p>Develop logical reasoning through coding challenges, puzzles, and real-world problem-solving.</p>
+      </details>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
