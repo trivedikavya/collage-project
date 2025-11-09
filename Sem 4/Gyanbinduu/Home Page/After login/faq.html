@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - Gyan Bindu</title>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Include Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+             --primary-bg: #efefef;
+    --primary-text: #000;
+    --secondary-bg: #ffffff;
+    --secondary-text: #555;
+    --accent-color: #008000;
+    --scrollbar-thumb: #000;
+    --scrollbar-bg: #ddd;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-bg: #1a1a1a;
+            --primary-text: #e0e0e0;
+            --secondary-bg: #252525;
+            --secondary-text: #a0a0a0;
+            --accent-color: #66BB6A;
+            --scrollbar-thumb: #66BB6A;
+            --scrollbar-bg: #444;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb);
+            border-radius: 4px;
+            border: 2px solid var(--scrollbar-bg);
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: var(--scrollbar-bg);
+        }
+
+        ::selection {
+            color: #fff;
+            background-color: var(--accent-color);
+        }
+
+        /* General Body Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* Header and Navigation Styles */
+        header {
+            background-color: var(--secondary-bg);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .desktop-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            color: #388E3C;
+        }
+
+        .desktop-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .desktop-nav ul li a {
+            text-decoration: none;
+            color: var(--primary-text);
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .desktop-nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            bottom: -5px;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .desktop-nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .desktop-nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .toggle-mode {
+            background-color: var(--accent-color);
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .toggle-mode:hover {
+            background-color: #388E3C;
+            transform: scale(1.05);
+        }
+
+        .mobile-controls {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mobile-logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .mobile-logo:hover {
+            color: #388E3C;
+        }
+
+        .mobile-controls .toggle-mode-mobile, .mobile-controls .menu-toggle {
+            background-color: transparent;
+            border: none;
+            color: var(--primary-text);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-controls .toggle-mode-mobile:hover, .mobile-controls .menu-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-nav {
+            display: none;
+            background-color: var(--secondary-bg);
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .mobile-nav.active {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 15px;
+            margin: 0;
+        }
+
+        .mobile-nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .mobile-nav ul li a {
+            text-decoration: none;
+            color: var(--primary-text);
+            font-weight: 500;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        /* FAQs Section */
+        .faqs {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--secondary-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .faqs:hover {
+            transform: translateY(-5px);
+        }
+
+        .faqs h1 {
+            font-size: 32px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .faqs h1::after {
+            content: '';
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .underline {
+            width: 90%;
+            max-width: 500px;
+            height: 1px;
+            background-color: var(--secondary-text);
+            margin: 8px auto;
+            opacity: 0.5;
+        }
+
+        .faq-list {
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            background-color: var(--primary-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            margin: 15px 0;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+            transform: scale(1.02);
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .faq-question span {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .faq-item:hover .faq-question span {
+            color: #fff;
+        }
+
+        .faq-question i {
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 15px;
+            font-size: 14px;
+            color: var(--secondary-text);
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Adjust based on content */
+            padding: 15px;
+        }
+
+        .faq-item:hover .faq-answer {
+            color: #fff;
+        }
+
+        /* Footer Styles */
+        footer {
+            padding: 40px 0 20px;
+            background: var(--secondary-bg);
+            color: var(--primary-text);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 30px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-logo:hover {
+            color: #388E3C;
+        }
+
+        .footer-center {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-columns {
+            display: flex;
+            gap: 40px;
+        }
+
+        .column h3 {
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            font-size: 18px;
+        }
+
+        .column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .column ul li {
+            margin-bottom: 8px;
+        }
+
+        .column ul li a {
+            text-decoration: none;
+            color: var(--primary-text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .column ul li a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--secondary-text);
+            text-align: center;
+        }
+
+        .footer-right .contact-section {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-right .contact-section h3 {
+            text-align: left;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            font-size: 18px;
+        }
+
+        .footer-right .contact-section p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-right .contact-section a {
+            color: var(--primary-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-right .contact-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-icons {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            font-size: 24px;
+            color: var(--primary-text);
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+            color: var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .desktop-nav ul {
+                gap: 20px;
+            }
+
+            .desktop-nav ul li a {
+                font-size: 15px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .toggle-mode {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+
+            .faqs {
+                padding: 20px;
+                margin: 30px auto;
+            }
+
+            .faqs h1 {
+                font-size: 28px;
+            }
+
+            .faq-question {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .faq-question span {
+                font-size: 16px;
+            }
+
+            .faq-answer {
+                font-size: 13px;
+            }
+
+            .footer-columns {
+                gap: 30px;
+            }
+
+            .footer-logo {
+                font-size: 22px;
+            }
+
+            .column h3 {
+                font-size: 16px;
+            }
+
+            .column ul li a {
+                font-size: 13px;
+            }
+
+            .footer-right .contact-section h3 {
+                font-size: 16px;
+            }
+
+            .footer-right .contact-section p {
+                font-size: 13px;
+            }
+
+            .social-icons a {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Navigation */
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-controls {
+                display: flex;
+            }
+
+            header {
+                padding: 10px 15px;
+            }
+
+            .mobile-logo {
+                font-size: 18px;
+            }
+
+            .mobile-nav {
+                top: 50px;
+            }
+
+            .mobile-nav ul {
+                padding: 10px;
+            }
+
+            .mobile-nav ul li a {
+                font-size: 15px;
+                padding: 8px;
+            }
+
+            /* FAQs */
+            .faqs {
+                padding: 15px;
+                margin: 20px auto;
+            }
+
+            .faqs h1 {
+                font-size: 24px;
+            }
+
+            .faqs h1::after {
+                width: 40px;
+                height: 2px;
+                bottom: -8px;
+            }
+
+            .underline {
+                width: 80%;
+                max-width: 400px;
+            }
+
+            .faq-question {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .faq-question span {
+                font-size: 15px;
+            }
+
+            .faq-answer {
+                font-size: 13px;
+            }
+
+            /* Footer */
+            footer {
+                padding: 30px 0 15px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .footer-logo {
+                font-size: 20px;
+            }
+
+            .footer-columns {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .column h3 {
+                font-size: 15px;
+            }
+
+            .column ul li {
+                margin-bottom: 6px;
+            }
+
+            .column ul li a {
+                font-size: 12px;
+            }
+
+            .footer-right .contact-section h3 {
+                text-align: center;
+                font-size: 15px;
+            }
+
+            .footer-right .contact-section p {
+                font-size: 12px;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+
+            .social-icons a {
+                font-size: 20px;
+            }
+
+            .footer-bottom {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Navigation */
+            header {
+                padding: 8px 10px;
+            }
+
+            .mobile-controls {
+                padding: 0 5px;
+            }
+
+            .mobile-logo {
+                font-size: 16px;
+            }
+
+            .mobile-controls .toggle-mode-mobile, .mobile-controls .menu-toggle {
+                font-size: 20px;
+            }
+
+            .mobile-nav {
+                top: 45px;
+            }
+
+            .mobile-nav ul li a {
+                font-size: 14px;
+                padding: 6px;
+            }
+
+            /* FAQs */
+            .faqs {
+                padding: 10px;
+                margin: 15px auto;
+            }
+
+            .faqs h1 {
+                font-size: 20px;
+            }
+
+            .faqs h1::after {
+                width: 30px;
+                bottom: -6px;
+            }
+
+            .underline {
+                width: 70%;
+                max-width: 300px;
+            }
+
+            .faq-question {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .faq-question span {
+                font-size: 14px;
+            }
+
+            .faq-answer {
+                font-size: 12px;
+            }
+
+            /* Footer */
+            footer {
+                padding: 20px 0 10px;
+            }
+
+            .footer-content {
+                gap: 15px;
+            }
+
+            .footer-logo {
+                font-size: 18px;
+            }
+
+            .footer-columns {
+                gap: 15px;
+            }
+
+            .column h3 {
+                font-size: 14px;
+            }
+
+            .column ul li a {
+                font-size: 11px;
+            }
+
+            .footer-right .contact-section h3 {
+                font-size: 14px;
+            }
+
+            .footer-right .contact-section p {
+                font-size: 11px;
+            }
+
+            .social-icons a {
+                font-size: 18px;
+            }
+
+            .footer-bottom {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="#" class="logo">Gyan Bindu</a>
+            <ul>
+                <li><a href="/Home Page/index.html">Home</a></li>
+                <li><a href="/Home Page/index.html">Courses</a></li>
+                <li><a href="/Home Page/index.html">About</a></li>
+                <li><a href="/Home Page/index.html">Contact</a></li>
+            </ul>
+            <button class="toggle-mode" id="modeToggle">
+                <i class="fas fa-sun"></i>
+                <span>Light Mode</span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="mobile-controls">
+            <a href="#" class="mobile-logo">Gyan Bindu</a>
+            <div>
+                <button class="toggle-mode-mobile" id="modeToggleMobile">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="/Home Page/index.html" class="mobile-nav-link">Home</a></li>
+                <li><a href="/Home Page/index.html" class="mobile-nav-link">Courses</a></li>
+                <li><a href="/Home Page/index.html" class="mobile-nav-link">About</a></li>
+                <li><a href="/Home Page/index.html" class="mobile-nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- FAQs Section -->
+    <div class="faqs">
+        <h1>FAQs</h1>
+        <div class="underline"></div>
+        <div class="underline"></div>
+        <div class="underline"></div>
+        <div class="underline"></div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>1.</span> What do I get on this website?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Gyan Bindu offers a variety of free educational resources, including innovative quiz services, AI-driven learning materials, and advanced courses. Our platform is designed to help learners worldwide access high-quality education at no cost.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>2.</span> Is the content on Gyan Bindu really free?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, all content on Gyan Bindu, including quizzes, learning resources, and courses, is completely free. We are committed to making education accessible to everyone without any hidden fees.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>3.</span> How can I contact the support team?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    You can reach our support team by emailing us at <a href="mailto:info@gyanbindu.com">info@gyanbindu.com</a> or calling us at +91 111 111 11. We’re here to assist you with any questions or issues.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>4.</span> Can I contribute to Gyan Bindu?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, we welcome contributions! If you’re interested in creating content, joining our team, or collaborating with us, please check out the "Hiring" section in the footer or contact us directly for more information.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <a href="#" class="footer-logo">Gyan Bindu</a>
+                </div>
+                
+                <div class="footer-center">
+                    <div class="footer-columns">
+                        <div class="column">
+                            <h3>Website</h3>
+                            <ul>
+                                <li><a href="#">Features</a></li>
+                                <li><a class="" style="cursor: pointer;" onclick="openPopuphiring()">Hiring</a></li>
+                                <li><a href="#">Documentation</a></li>
+                                <li><a href="more-about-us.html">More About Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3>Support</h3>
+                            <ul>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="terms-and-conditions.html">Terms of Service</a></li>
+                                <li><a href="#">Support</a></li>
+                                <li><a href="faqs.html">FAQs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        © 2025 Gyanbindu. All rights reserved.
+                    </div>
+                </div>
+            
+                <div class="footer-right">
+                    <div class="contact-section">
+                        <h3>Contact Us</h3>
+                        <p>Email: <a href="mailto:info@gyanbindu.com">info@gyanbindu.com</a></p>
+                        <p>Phone: +91 111 111 11</p>
+                    </div>
+            
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+        });
+
+        // Light/Dark Mode Toggle
+        const modeToggle = document.getElementById('modeToggle');
+        const modeToggleMobile = document.getElementById('modeToggleMobile');
+        const body = document.body;
+
+        function toggleMode() {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            modeToggle.querySelector('span').textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            modeToggle.querySelector('i').className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            modeToggleMobile.querySelector('i').className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        modeToggle.addEventListener('click', toggleMode);
+        modeToggleMobile.addEventListener('click', toggleMode);
+
+        // FAQ Dropdown Toggle
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Toggle active class on the clicked item
+                item.classList.toggle('active');
+
+                // Close other open FAQs
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Placeholder for Hiring Popup
+        function openPopuphiring() {
+            alert("Hiring popup will open here!");
+        }
+    </script>
+</body>
+</html>

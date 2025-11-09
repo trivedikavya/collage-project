@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with Editable Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+  <link rel="stylesheet" href="i.html">
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #ddd;
+      --secondary-bg-color: #1e1e1e;
+      --accent-color: #00ff00;
+      --message-bg-color: #252525;
+      --shadow-color: rgba(0, 255, 0, 0.3);
+    }
+
+    body.light-mode {
+      --bg-color: #ffffff;
+      --text-color: #121212;
+      --secondary-bg-color: #f0f0f0;
+      --accent-color: #00aa00;
+      --message-bg-color: #e0e0e0;
+      --shadow-color: rgba(0, 170, 0, 0.3);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--secondary-bg-color);
+      color: var(--text-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    .desktop-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .desktop-nav ul li {
+      display: inline;
+    }
+
+    .desktop-nav ul li a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+
+
+
+
+    .navbar {
+      background-color: var(--secondary-bg-color);
+      color: var(--text-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .navbar .profile-btn,
+    .navbar .theme-toggle {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: 1px solid var(--accent-color);
+      border-radius: 5px;
+      background: transparent;
+      color: var(--accent-color);
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .chat-box {
+      width: 90%;
+      height: 500px;
+      background-color: var(--secondary-bg-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--accent-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 10px;
+      overflow-y: auto;
+      border-bottom: 2px solid var(--accent-color);
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: var(--message-bg-color);
+      border-radius: 5px;
+      box-shadow: 0 0 5px var(--shadow-color);
+    }
+
+    .message .user-name {
+      font-size: 12px;
+      color: var(--accent-color);
+      margin-bottom: 5px;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background-color: var(--secondary-bg-color);
+      border-top: 2px solid var(--accent-color);
+    }
+
+    .chat-input textarea {
+      flex: 1;
+      padding: 8px;
+      font-size: 16px;
+      border: 2px solid var(--accent-color);
+      border-radius: 5px;
+      outline: none;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .send-button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 10px var(--accent-color);
+    }
+
+    .send-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--accent-color);
+    }
+
+    .send-button:active {
+      transform: scale(0.95);
+    }
+
+    .profile-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .profile-form {
+      background: var(--secondary-bg-color);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--accent-color);
+      text-align: center;
+      color: var(--text-color);
+      width: 300px;
+    }
+
+    .profile-form input {
+      width: 80%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid var(--accent-color);
+      border-radius: 5px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-size: 16px;
+    }
+
+    .profile-form button {
+      padding: 10px 20px;
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .footer {
+      background-color: var(--secondary-bg-color);
+      color: var(--text-color);
+      text-align: center;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+   
+      <a href="#" class="logo">GYAN BINDU</a>
+      <nav class="desktop-nav">
+        <ul>
+          <li><a href="After login/afterlogin.html">Home</a></li>
+          <li><a href="After login/afterlogin.html">Courses</a></li>
+          <li><a href="After login/afterlogin.html">About</a></li>
+          <li><a href="After login/afterlogin.html">Contact</a></li>
+        </ul>
+      </nav>
+      
+    <div >
+      <button class="profile-btn" style="justify-content: space-between;" onclick="openProfileModal()">Profile</button>
+      <button class="theme-toggle" onclick="toggleTheme()">Light Mode</button>
+    </div>
+  </div>
+
+  <!-- Chat Section -->
+  <div class="chat-container">
+    <div class="chat-box">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message">
+          <div class="user-name">System</div>
+          Welcome to the Community of Gyan Bindu. 
+        </div>
+      </div>
+      <div class="chat-input">
+        <textarea id="messageInput" rows="2" placeholder="Type your message here..."></textarea>
+        <button class="send-button" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="profile-modal" id="profileModal" style="display: none;">
+    <div class="profile-form">
+      <h2>Edit Your Profile</h2>
+      <input type="text" id="userName" placeholder="Enter your name">
+      <input type="email" id="userEmail" placeholder="Enter your email">
+      <button onclick="saveProfile()">Save</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    &copy; 2025 Enviro AI. All rights reserved.
+  </div>
+
+  <script>
+    const profileModal = document.getElementById('profileModal');
+    const userNameInput = document.getElementById('userName');
+    const userEmailInput = document.getElementById('userEmail');
+    const chatMessages = document.getElementById('chatMessages');
+    const themeToggleBtn = document.querySelector('.theme-toggle');
+    let userName = localStorage.getItem('userName') || '';
+    let userEmail = localStorage.getItem('userEmail') || '';
+    let isLightMode = localStorage.getItem('theme') === 'light';
+
+    function applyTheme() {
+      document.body.classList.toggle('light-mode', isLightMode);
+      themeToggleBtn.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+    }
+
+    function toggleTheme() {
+      isLightMode = !isLightMode;
+      localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+      applyTheme();
+    }
+
+    function openProfileModal() {
+      userNameInput.value = userName;
+      userEmailInput.value = userEmail;
+      profileModal.style.display = 'flex';
+    }
+
+    function saveProfile() {
+      userName = userNameInput.value.trim();
+      userEmail = userEmailInput.value.trim();
+      if (userName && userEmail) {
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('userEmail', userEmail);
+        profileModal.style.display = 'none';
+        alert('Profile updated successfully!');
+      } else {
+        alert('Please fill out both fields.');
+      }
+    }
+
+    function sendMessage() {
+      if (!userName || !userEmail) {
+        alert('Please complete your profile first!');
+        openProfileModal();
+        return;
+      }
+      const input = document.getElementById('messageInput');
+      const messageText = input.value.trim();
+      if (!messageText) return;
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message';
+      messageDiv.innerHTML = `<div class="user-name">${userName}</div>${messageText}`;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      input.value = '';
+    }
+
+    window.onload = () => {
+      applyTheme();
+      if (!userName || !userEmail) openProfileModal();
+    };
+  </script>
+</body>
+</html>
+
+<!-- this is future thing in which it can chat live like a community in 
+24 hr it will delete and at 23:30 its alert come of deleting msg has been started 
+and at last only last 10 msg only left  is live chat 
+your ai tech world caht will be secreats project will be secreate  -->
