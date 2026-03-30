@@ -1,12 +1,8 @@
-That is an excellent functionality enhancement! Turning the "simple animation" into a **user-triggered interaction** will significantly improve your project grade.
 
-To achieve this, we cannot use pure SVG code alone. We need a small snippet of **JavaScript** to listen for the click event and change the scene’s attributes.
-
-Here is the complete solution. I have embedded the JavaScript directly into the SVG file, so it remains a single, clickable file.
 
 ### The Interactive SVG Code
 
-Save the entire block below as **`smart_home_interaction.svg`**.
+
 
 ```xml
 <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" onload="init_scene()">
