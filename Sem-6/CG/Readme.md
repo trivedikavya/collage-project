@@ -7,7 +7,7 @@
 
 ---
 
-## 1. SVG Code File (`smart_home.svg`)
+## 1. SVG Code File 
 Copy this code exactly. It includes the shapes, the interactive logic, and the animations required by your guidelines.
 
 ```xml
@@ -96,7 +96,7 @@ The project is structured using a hierarchical **XML-based SVG format**. It is d
 * **`<g>`**: Organizes elements for easier coordinate manipulation (using `translate`).
 
 ### **Functionality**
-The project functions as an **Interactive Smart Home UI**. 
+The project functions as an **Darkmode/Lightmode UI Change**. 
 1.  **Continuous Animation**: When the scene is in "Day Mode," the sun’s rays rotate infinitely using SVG's native animation engine.
 2.  **User Interaction**: By clicking the toggle switch, the user triggers a JavaScript function `toggleTheme()`.
 3.  **Transformation & State Change**: 
