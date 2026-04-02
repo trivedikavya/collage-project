@@ -2,6 +2,11 @@
 
 <img width="809" height="481" alt="image" src="https://github.com/user-attachments/assets/a12d8aa7-83b8-4c7a-bf42-e567b6aad984" />
 
+### Project Demo
+
+[Video of the Output ( click to view )](https://github.com/trivedikavya/collage-project/raw/refs/heads/main/Sem-6/CG/Svgrecording.mp4)
+
+
 
 ### The Interactive SVG Code
 
