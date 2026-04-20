@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Negotio.ai — Dashboard</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#0f172a;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px}
+  .app-wrap{position:relative;width:100%;max-width:1100px}
+  .app{display:flex;height:680px;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+
+  /* Sidebar */
+  .sidebar{width:210px;min-width:210px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:16px 0}
+  .logo{padding:0 16px 16px;border-bottom:1px solid #e2e8f0;margin-bottom:10px}
+  .logo-text{font-size:16px;font-weight:600;color:#0f172a;letter-spacing:-.3px}
+  .soc-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:20px;margin-top:5px;border:1px solid #bbf7d0;font-weight:500}
+  .soc-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block}
+  .nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;color:#64748b;cursor:pointer;border-left:2px solid transparent;transition:background .12s,color .12s;user-select:none}
+  .nav-item:hover{background:#f8fafc;color:#0f172a}
+  .nav-item.active{background:#f1f5f9;color:#1d4ed8;border-left:2px solid #3b82f6;font-weight:500}
+  .ni{width:15px;height:15px;flex-shrink:0;opacity:.65}
+  .nav-item.active .ni{opacity:1}
+  .nav-badge{margin-left:auto;font-size:10px;background:#eff6ff;color:#1d4ed8;padding:1px 7px;border-radius:10px;font-weight:500}
+  .user-area{margin-top:auto;padding:12px 16px;border-top:1px solid #e2e8f0}
+  .avatar{width:30px;height:30px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+
+  /* Main */
+  .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;background:#f8fafc}
+  .topbar{padding:20px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;background:#fff;border-bottom:1px solid #e2e8f0;padding-bottom:16px}
+  .welcome h1{font-size:18px;font-weight:600;color:#0f172a}
+  .welcome p{font-size:12px;color:#64748b;margin-top:3px}
+  .btn-p{background:#1d4ed8;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap;transition:background .12s;font-family:inherit}
+  .btn-p:hover{background:#1e40af}
+  .btn-s{background:#fff;color:#374151;border:1px solid #e2e8f0;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap;transition:background .12s;font-family:inherit}
+  .btn-s:hover{background:#f8fafc}
+
+  /* Content */
+  .content{padding:20px 24px;flex:1}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+  .stat-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px}
+  .stat-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:500}
+  .stat-val{font-size:22px;font-weight:600}
+  .stat-sub{font-size:11px;color:#94a3b8;margin-top:4px}
+
+  /* Section title */
+  .sec-title{font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+
+  /* Table */
+  .table-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:20px}
+  table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+  th{padding:10px 14px;text-align:left;font-size:11px;color:#94a3b8;font-weight:600;background:#f8fafc;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.05em}
+  td{padding:11px 14px;border-bottom:1px solid #f1f5f9;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:#f8fafc;cursor:pointer}
+
+  /* Badges */
+  .badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500}
+  .b-blue{background:#eff6ff;color:#1d4ed8}
+  .b-amber{background:#fffbeb;color:#92400e}
+  .b-green{background:#f0fdf4;color:#166534}
+  .b-red{background:#fef2f2;color:#991b1b}
+  .b-purple{background:#faf5ff;color:#6b21a8}
+  .b-slate{background:#f1f5f9;color:#475569}
+
+  /* Score bar */
+  .score-bar{display:flex;align-items:center;gap:8px}
+  .bar-bg{flex:1;height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:3px}
+  .view-btn{font-size:11px;color:#1d4ed8;background:none;border:1px solid #bfdbfe;cursor:pointer;padding:3px 10px;border-radius:6px;font-family:inherit;transition:background .12s}
+  .view-btn:hover{background:#eff6ff}
+
+  /* Chart */
+  .chart-sec{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:20px}
+  .chart-bars{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:12px}
+  .bc{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+  .bcf{width:100%;border-radius:4px 4px 0 0;background:#3b82f6;min-height:4px;transition:height .3s}
+  .bcl{font-size:10px;color:#94a3b8}
+  .bcv{font-size:10px;font-weight:600;color:#0f172a}
+
+  /* Pages */
+  .page{display:none}
+  .page.active{display:block}
+
+  /* AI Panel */
+  .ai-panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:20px}
+  .ai-ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#1d4ed8}
+  .ai-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;flex-shrink:0}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .chat-area{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;padding-right:4px}
+  .cmsg{max-width:82%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.55}
+  .ca{background:#eff6ff;color:#1e3a8a;align-self:flex-start;border-bottom-left-radius:3px}
+  .cv{background:#f8fafc;color:#0f172a;align-self:flex-end;border:1px solid #e2e8f0;border-bottom-right-radius:3px}
+  .clbl{font-size:10px;color:#94a3b8;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .prompt-box{margin-top:12px}
+  .pl{font-size:11px;color:#64748b;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .pta{width:100%;font-size:12px;padding:10px;border:1px solid #e2e8f0;border-radius:8px;resize:none;background:#f8fafc;color:#0f172a;height:58px;font-family:inherit;line-height:1.5}
+  .pta:focus{outline:none;border-color:#3b82f6}
+
+  /* Modal overlay */
+  .overlay{position:absolute;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;border-radius:14px;z-index:100}
+  .modal{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;width:360px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+  .mtitle{font-size:15px;font-weight:600;margin-bottom:4px;color:#0f172a}
+  .msub{font-size:12px;color:#64748b;margin-bottom:16px}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
+  .mrow:last-of-type{border-bottom:none}
+  .mrl{color:#64748b;font-size:12px}
+  .mclose{background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;width:100%;margin-top:14px;color:#374151;font-family:inherit;font-weight:500;transition:background .12s}
+  .mclose:hover{background:#e2e8f0}
+
+  /* Form */
+  .form-row{margin-bottom:12px}
+  .form-row label{display:block;font-size:11px;color:#64748b;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .form-row input,.form-row select{width:100%;font-size:13px;padding:9px 11px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;color:#0f172a;font-family:inherit;transition:border .12s}
+  .form-row input:focus,.form-row select:focus{outline:none;border-color:#3b82f6}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* Contracts */
+  .ccard{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .12s,border-color .12s;gap:10px}
+  .ccard:hover{background:#f8fafc;border-color:#cbd5e1}
+  .cname{font-size:13px;font-weight:600;color:#0f172a}
+  .cmeta{font-size:11px;color:#64748b;margin-top:3px}
+
+  /* Settings */
+  .set-item{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#0f172a}
+  .set-item:last-child{border-bottom:none}
+  .toggle{width:34px;height:19px;border-radius:10px;background:#3b82f6;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+  .tdot{width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;transition:right .18s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .toggle.off{background:#e2e8f0}
+  .toggle.off .tdot{right:17px}
+
+  /* Toast */
+  .notif{position:absolute;top:14px;right:14px;background:#1d4ed8;color:#fff;font-size:12px;padding:8px 16px;border-radius:8px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;font-weight:500;box-shadow:0 4px 12px rgba(29,78,216,.3)}
+  .notif.show{opacity:1}
+
+  input[type=file]{display:none}
+
+  /* Agents grid */
+  .agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+  /* Scrollbar */
+  .main::-webkit-scrollbar,.chat-area::-webkit-scrollbar{width:4px}
+  .main::-webkit-scrollbar-track,.chat-area::-webkit-scrollbar-track{background:transparent}
+  .main::-webkit-scrollbar-thumb,.chat-area::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="app-wrap">
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-text">Negotio.ai</div>
+      <div><span class="soc-badge"><span class="soc-dot"></span> SOC2 Compliant AI</span></div>
+    </div>
+
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg class="ni" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/>
+        <rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
+      </svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('contracts',this)">
+      <svg class="ni" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 2h8l3 3v9H3V2z"/><path d="M11 2v3h3"/><path d="M5 7h6M5 10h4"/>
+      </svg>
+      My Contracts
+    </div>
+    <div class="nav-item" onclick="showPage('agents',this)">
+      <svg class="ni" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="6" r="3"/><path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5"/>
+      </svg>
+      AI Agents
+      <span class="nav-badge" id="agent-count">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('analytics',this)">
+      <svg class="ni" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 12l3-4 3 2 3-5 3 3"/><path d="M2 14h12"/>
+      </svg>
+      Analytics
+    </div>
+    <div class="nav-item" onclick="showPage('settings',this)">
+      <svg class="ni" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="2.5"/>
+        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/>
+      </svg>
+      Settings
+    </div>
+
+    <div class="user-area">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="avatar">K</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#0f172a">Kavya</div>
+          <div style="font-size:11px;color:#64748b">Pro Plan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page active" id="page-dashboard">
+      <div class="topbar">
+        <div class="welcome">
+          <h1>Welcome back, Kavya</h1>
+          <p id="dash-sub">You have 2 risk alerts and 5 active negotiations</p>
+        </div>
+        <button class="btn-p" onclick="openNewNegModal()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 1v14M1 8h14"/></svg>
+          New Negotiation
+        </button>
+      </div>
+      <div class="content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Savings</div>
+            <div class="stat-val" id="stat-savings" style="color:#16a34a">$4,200</div>
+            <div class="stat-sub">+18% vs last quarter</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Negotiations</div>
+            <div class="stat-val" id="stat-neg" style="color:#1d4ed8">5</div>
+            <div class="stat-sub" id="stat-neg-sub">2 closing this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Risk Alerts</div>
+            <div class="stat-val" style="color:#d97706">2</div>
+            <div class="stat-sub">Action required</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Active Negotiations</div>
+        <div class="table-wrap">
+          <table>
+            <colgroup>
+              <col style="width:22%"><col style="width:15%"><col style="width:17%">
+              <col style="width:30%"><col style="width:16%">
+            </colgroup>
+            <thead>
+              <tr><th>Vendor</th><th>Category</th><th>Status</th><th>AI Confidence</th><th></th></tr>
+            </thead>
+            <tbody id="neg-table"></tbody>
+          </table>
+        </div>
+
+        <div class="sec-title">Savings Over 6 Months</div>
+        <div class="chart-sec">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:12px;color:#64748b;font-weight:500">Monthly savings ($)</div>
+            <div style="font-size:11px;color:#94a3b8">Last 6 months</div>
+          </div>
+          <div class="chart-bars" id="savings-chart"></div>
+        </div>
+
+        <div class="sec-title">AI Agent — Active Chat (Zoom Enterprise)</div>
+        <div class="ai-panel">
+          <div class="ai-ph">
+            <div class="ai-badge"><span class="ai-dot"></span> Negotio AI Agent — Zoom Enterprise</div>
+            <span style="font-size:11px;color:#64748b;background:#f0fdf4;padding:2px 8px;border-radius:20px;border:1px solid #bbf7d0;color:#166534;font-weight:500">Live</span>
+          </div>
+          <div class="chat-area" id="chat-area">
+            <div>
+              <div class="clbl">Negotio AI Agent</div>
+              <div class="cmsg ca">We are looking for a 15% volume discount for 500 seats on the enterprise plan.</div>
+            </div>
+            <div style="align-self:flex-end">
+              <div class="clbl" style="text-align:right">Zoom Vendor</div>
+              <div class="cmsg cv">We can offer a 10% discount for that volume commitment.</div>
+            </div>
+            <div>
+              <div class="clbl">Negotio AI Agent</div>
+              <div class="cmsg ca">Based on current market data, 12% is the standard rate for this tier. We'd like to settle at 13% given our 3-year commitment.</div>
+            </div>
+          </div>
+          <div class="prompt-box">
+            <div class="pl">Your Instruction to AI</div>
+            <textarea class="pta" id="ai-prompt">Get me a better deal on our Zoom Enterprise plan before it renews on May 1st.</textarea>
+          </div>
+          <button onclick="sendInstruction()" class="btn-p" style="margin-top:10px;font-size:12px">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l12-6-6 12V8H2z"/></svg>
+            Send Instruction to Agent
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTRACTS PAGE -->
+    <div class="page" id="page-contracts">
+      <div class="topbar">
+        <div class="welcome">
+          <h1>My Contracts</h1>
+          <p id="contracts-sub">Loading contracts...</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-s" onclick="document.getElementById('file-input').click()">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v10M4 5l4-4 4 4"/><rect x="2" y="12" width="12" height="3" rx="1"/></svg>
+            Upload Contract
+          </button>
+          <input type="file" id="file-input" accept=".pdf,.docx,.txt,.csv,.xlsx" onchange="handleUpload(event)">
+          <button class="btn-p" onclick="openNewNegModal()">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 1v14M1 8h14"/></svg>
+            New Negotiation
+          </button>
+        </div>
+      </div>
+      <div class="content">
+        <div id="contracts-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+
+    <!-- AI AGENTS PAGE -->
+    <div class="page" id="page-agents">
+      <div class="topbar">
+        <div class="welcome">
+          <h1>AI Agents</h1>
+          <p id="agent-sub">3 agents currently active</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="agents-grid" id="agents-grid"></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS PAGE -->
+    <div class="page" id="page-analytics">
+      <div class="topbar">
+        <div class="welcome"><h1>Analytics</h1><p>Performance overview — all time</p></div>
+      </div>
+      <div class="content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Avg Discount Won</div>
+            <div class="stat-val" style="color:#1d4ed8">12.4%</div>
+            <div class="stat-sub">vs 8.1% industry avg</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Negotiations Won</div>
+            <div class="stat-val" id="won-count" style="color:#16a34a">8</div>
+            <div class="stat-sub">out of 10 closed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Time to Close</div>
+            <div class="stat-val">4.2d</div>
+            <div class="stat-sub">vs 12d manual avg</div>
+          </div>
+        </div>
+
+        <div class="sec-title">Savings Breakdown by Vendor</div>
+        <div class="table-wrap">
+          <table>
+            <colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>
+            <thead>
+              <tr><th>Vendor</th><th>Original Price</th><th>Negotiated</th><th>Monthly Savings</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-weight:500">AWS</td><td>$3,200/mo</td><td>$2,720/mo</td><td><span class="badge b-green">$480 saved</span></td></tr>
+              <tr><td style="font-weight:500">Zoom</td><td>$1,800/mo</td><td>$1,566/mo</td><td><span class="badge b-green">$234 saved</span></td></tr>
+              <tr><td style="font-weight:500">Slack</td><td>$1,200/mo</td><td>$1,080/mo</td><td><span class="badge b-green">$120 saved</span></td></tr>
+              <tr><td style="font-weight:500">HubSpot</td><td>$2,400/mo</td><td>$2,064/mo</td><td><span class="badge b-green">$336 saved</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sec-title">AI Performance</div>
+        <div class="table-wrap">
+          <table>
+            <colgroup><col style="width:30%"><col style="width:25%"><col style="width:25%"><col style="width:20%"></colgroup>
+            <thead>
+              <tr><th>Metric</th><th>This Quarter</th><th>Last Quarter</th><th>Trend</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Avg Confidence Score</td><td>85.4%</td><td>79.2%</td><td><span class="badge b-green">+7.8%</span></td></tr>
+              <tr><td>Vendor Counter-offers</td><td>12</td><td>9</td><td><span class="badge b-blue">+33%</span></td></tr>
+              <tr><td>Deals Signed</td><td>4</td><td>3</td><td><span class="badge b-green">+33%</span></td></tr>
+              <tr><td>Risk Alerts Resolved</td><td>5</td><td>3</td><td><span class="badge b-purple">+67%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page" id="page-settings">
+      <div class="topbar">
+        <div class="welcome"><h1>Settings</h1><p>Configure your workspace preferences</p></div>
+      </div>
+      <div class="content">
+        <div style="margin-bottom:20px">
+          <div class="sec-title">Notifications</div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:0 16px">
+            <div class="set-item"><span>Risk alert emails</span><div class="toggle" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+            <div class="set-item"><span>Negotiation milestone updates</span><div class="toggle" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+            <div class="set-item"><span>Weekly savings summary</span><div class="toggle off" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+            <div class="set-item"><span>Contract renewal reminders</span><div class="toggle" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+          </div>
+        </div>
+        <div style="margin-bottom:20px">
+          <div class="sec-title">AI Agent Behavior</div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:0 16px">
+            <div class="set-item"><span>Auto-approve offers under 5% variance</span><div class="toggle off" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+            <div class="set-item"><span>Require human approval before signing</span><div class="toggle" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+            <div class="set-item"><span>Use market benchmarks in negotiation</span><div class="toggle" onclick="this.classList.toggle('off')"><div class="tdot"></div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-title">Data Management</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-s" onclick="exportData()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v10M4 11l4 4 4-4"/><rect x="2" y="12" width="12" height="3" rx="1"/></svg>
+              Export Data (JSON)
+            </button>
+            <button class="btn-s" style="color:#991b1b;border-color:#fca5a5" onclick="clearAllData()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h10M5 4V2h6v2M6 7v5M10 7v5"/><path d="M4 4l1 10h6l1-10"/></svg>
+              Clear All Local Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .main -->
+</div><!-- end .app -->
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mtitle" id="modal-title"></div>
+    <div class="msub" id="modal-sub"></div>
+    <div id="modal-body"></div>
+    <button class="mclose" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- NEW NEGOTIATION MODAL -->
+<div class="overlay" id="neg-modal" style="display:none" onclick="if(event.target===this)closeNegModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mtitle">New Negotiation</div>
+    <div class="msub">Add a vendor negotiation — saved locally in your browser</div>
+    <div class="form-row"><label>Vendor Name *</label><input id="nv-vendor" type="text" placeholder="e.g. Salesforce, Figma, Notion"></div>
+    <div class="form-grid">
+      <div class="form-row"><label>Category</label>
+        <select id="nv-cat">
+          <option>Cloud</option><option>CRM</option><option>Productivity</option>
+          <option>Comms</option><option>Video</option><option>Security</option>
+          <option>Analytics</option><option>HR</option><option>Finance</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Risk Level</label>
+        <select id="nv-risk">
+          <option>Low</option><option selected>Medium</option><option>High</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>Annual Value ($)</label><input id="nv-value" type="number" placeholder="e.g. 24000"></div>
+      <div class="form-row"><label>Renewal Date</label><input id="nv-renewal" type="date"></div>
+    </div>
+    <div class="form-row"><label>Negotiation Goal</label><input id="nv-goal" type="text" placeholder="e.g. 15% discount for 500 seats"></div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn-p" style="flex:1" onclick="saveNegotiation()">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5 7-9"/></svg>
+        Save &amp; Deploy Agent
+      </button>
+      <button class="mclose" style="margin-top:0;flex:1" onclick="closeNegModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+</div><!-- end .app-wrap -->
+
+<script>
+  const LS_NEG = 'negotio_negotiations_v2';
+  const LS_CON = 'negotio_contracts_v2';
+
+  const defaultNeg = [
+    {id:1, vendor:'AWS', category:'Cloud', status:'Negotiating', score:88, annual:'$38,400/yr', renewal:'Aug 15, 2025', goal:'Reserved instance pricing discount'},
+    {id:2, vendor:'Google Workspace', category:'Productivity', status:'Analysis', score:72, annual:'$14,400/yr', renewal:'Jun 1, 2025', goal:'Volume licensing reduction'},
+    {id:3, vendor:'HubSpot', category:'CRM', status:'Negotiating', score:81, annual:'$28,800/yr', renewal:'Oct 22, 2025', goal:'Marketing Hub bundle deal'},
+    {id:4, vendor:'Slack', category:'Comms', status:'Signed', score:95, annual:'$14,400/yr', renewal:'Dec 1, 2025', goal:'Business+ plan 20% off'},
+    {id:5, vendor:'Zoom', category:'Video', status:'Negotiating', score:91, annual:'$21,600/yr', renewal:'May 1, 2025', goal:'15% discount for 500 seats'}
+  ];
+
+  const defaultCon = [
+    {id:1, name:'AWS Enterprise Agreement', vendor:'Amazon Web Services', renewal:'Aug 15, 2025', value:'$38,400/yr', risk:'Low', type:'default'},
+    {id:2, name:'Google Workspace Business', vendor:'Google LLC', renewal:'Jun 1, 2025', value:'$14,400/yr', risk:'Medium', type:'default'},
+    {id:3, name:'HubSpot Marketing Hub', vendor:'HubSpot Inc.', renewal:'Oct 22, 2025', value:'$28,800/yr', risk:'Low', type:'default'},
+    {id:4, name:'Slack Business+', vendor:'Salesforce / Slack', renewal:'Dec 1, 2025', value:'$14,400/yr', risk:'Low', type:'default'},
+    {id:5, name:'Zoom Enterprise', vendor:'Zoom Video Communications', renewal:'May 1, 2025', value:'$21,600/yr', risk:'High', type:'default'}
+  ];
+
+  const savings = [420, 680, 750, 900, 1050, 1400];
+  const months  = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+
+  function loadNeg() { try { return JSON.parse(localStorage.getItem(LS_NEG)) || defaultNeg; } catch { return defaultNeg; } }
+  function saveNeg(d) { try { localStorage.setItem(LS_NEG, JSON.stringify(d)); } catch {} }
+  function loadCon() { try { return JSON.parse(localStorage.getItem(LS_CON)) || defaultCon; } catch { return defaultCon; } }
+  function saveCon(d) { try { localStorage.setItem(LS_CON, JSON.stringify(d)); } catch {} }
+
+  function toast(msg, isError) {
+    const n = document.getElementById('notif');
+    n.textContent = msg;
+    n.style.background = isError ? '#dc2626' : '#1d4ed8';
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 2800);
+  }
+
+  function renderNegTable() {
+    const negs = loadNeg();
+    const active = negs.filter(n => n.status !== 'Signed');
+    document.getElementById('stat-neg').textContent = active.length;
+    document.getElementById('stat-neg-sub').textContent = active.length + ' active negotiations';
+    document.getElementById('dash-sub').textContent = 'You have 2 risk alerts and ' + active.length + ' active negotiations';
+    document.getElementById('agent-count').textContent = active.length;
+    document.getElementById('agent-sub').textContent = active.length + ' agent' + (active.length !== 1 ? 's' : '') + ' currently active';
+
+    const tb = document.getElementById('neg-table');
+    if (!negs.length) {
+      tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;font-size:13px">No negotiations yet — click "New Negotiation" to add one.</td></tr>';
+      return;
+    }
+    tb.innerHTML = negs.map(n => {
+      const bc = n.status === 'Negotiating' ? 'b-blue' : n.status === 'Analysis' ? 'b-amber' : 'b-green';
+      const fc = n.score >= 85 ? '#16a34a' : n.score >= 70 ? '#f59e0b' : '#dc2626';
+      return `<tr onclick="openNegDetail(${n.id})">
+        <td style="font-weight:600">${n.vendor}</td>
+        <td><span class="badge b-slate">${n.category}</span></td>
+        <td><span class="badge ${bc}">${n.status}</span></td>
+        <td><div class="score-bar"><div class="bar-bg"><div class="bar-fill" style="width:${n.score}%;background:${fc}"></div></div><span style="font-size:11px;min-width:28px;text-align:right;font-weight:500">${n.score}%</span></div></td>
+        <td><button class="view-btn" onclick="event.stopPropagation();openNegDetail(${n.id})">View</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderChart() {
+    const max = Math.max(...savings);
+    document.getElementById('savings-chart').innerHTML = savings.map((v, i) =>
+      `<div class="bc">
+        <div class="bcv">$${v}</div>
+        <div class="bcf" style="height:${Math.round((v / max) * 76)}px"></div>
+        <div class="bcl">${months[i]}</div>
+      </div>`
+    ).join('');
+  }
+
+  function renderContracts() {
+    const cons = loadCon();
+    document.getElementById('contracts-sub').textContent = cons.length + ' contract' + (cons.length !== 1 ? 's' : '') + ' on file';
+    const cl = document.getElementById('contracts-list');
+    if (!cons.length) {
+      cl.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:36px;font-size:13px;background:#fff;border:1px solid #e2e8f0;border-radius:10px">No contracts yet. Upload a file or create a new negotiation.</div>';
+      return;
+    }
+    cl.innerHTML = cons.map(c => {
+      const rb = c.risk === 'High' ? 'b-red' : c.risk === 'Medium' ? 'b-amber' : 'b-green';
+      const newTag = c.type === 'new' ? '<span class="badge b-blue" style="margin-left:8px;font-size:10px">New</span>' : '';
+      const uploadTag = c.type === 'uploaded' ? '<span class="badge b-purple" style="margin-left:8px;font-size:10px">Uploaded</span>' : '';
+      return `<div class="ccard" onclick="openConDetail(${c.id})">
+        <div style="min-width:0">
+          <div class="cname" style="display:flex;align-items:center;flex-wrap:wrap;gap:2px">${c.name}${newTag}${uploadTag}</div>
+          <div class="cmeta">${c.vendor} &bull; Renews ${c.renewal}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span style="font-size:13px;font-weight:600;color:#0f172a">${c.value}</span>
+          <span class="badge ${rb}">${c.risk}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderAgents() {
+    const negs = loadNeg().filter(n => n.status !== 'Signed');
+    const statusColors = { 'Negotiating': '#22c55e', 'Analysis': '#f59e0b' };
+    const statusMsg = { 'Negotiating': 'Sending counter-offer', 'Analysis': 'Analyzing market data' };
+    const grid = document.getElementById('agents-grid');
+    if (!negs.length) {
+      grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#94a3b8;font-size:13px;padding:28px;background:#fff;border:1px solid #e2e8f0;border-radius:10px">No active agents. Start a negotiation to deploy one.</div>';
+      return;
+    }
+    const borderColors = ['#22c55e','#f59e0b','#3b82f6','#a855f7','#06b6d4','#ec4899'];
+    grid.innerHTML = negs.map((n, i) => {
+      const c = statusColors[n.status] || '#3b82f6';
+      const msg = statusMsg[n.status] || 'Processing';
+      const bc = borderColors[i % borderColors.length];
+      return `<div class="stat-card" style="border-left:3px solid ${bc}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:600;color:#0f172a">${n.vendor}</div>
+          <span style="width:8px;height:8px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0"></span>
+        </div>
+        <div style="font-size:12px;color:#64748b;margin-bottom:6px">${msg}</div>
+        <div style="font-size:11px;color:${c};font-weight:500">Conf: ${n.score}% — ${n.status}</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px">Renews: ${n.renewal}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (el) el.classList.add('active');
+    if (id === 'dashboard') { renderNegTable(); renderChart(); }
+    if (id === 'contracts') renderContracts();
+    if (id === 'agents') renderAgents();
+  }
+
+  function openNegDetail(id) {
+    const n = loadNeg().find(x => x.id === id);
+    if (!n) return;
+    const bc = n.status === 'Negotiating' ? 'b-blue' : n.status === 'Analysis' ? 'b-amber' : 'b-green';
+    const fc = n.score >= 85 ? '#16a34a' : '#d97706';
+    document.getElementById('modal-title').textContent = n.vendor + ' — Negotiation Details';
+    document.getElementById('modal-sub').textContent = 'AI-powered negotiation summary';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="mrow"><span class="mrl">Category</span><span>${n.category}</span></div>
+      <div class="mrow"><span class="mrl">Status</span><span class="badge ${bc}">${n.status}</span></div>
+      <div class="mrow"><span class="mrl">AI Confidence</span><span style="font-weight:600;color:${fc}">${n.score}%</span></div>
+      <div class="mrow"><span class="mrl">Annual Value</span><span style="font-weight:600">${n.annual}</span></div>
+      <div class="mrow"><span class="mrl">Renewal Date</span><span>${n.renewal}</span></div>
+      <div class="mrow"><span class="mrl">Goal</span><span style="color:#1d4ed8">${n.goal || 'Not specified'}</span></div>
+      <div class="mrow"><span class="mrl">Est. Savings</span><span style="color:#16a34a;font-weight:600">$${Math.round(n.score * 9).toLocaleString()}</span></div>
+      <div class="mrow"><span class="mrl">AI Agent</span><span style="color:#16a34a;font-weight:500">Active &#9679;</span></div>`;
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function openConDetail(id) {
+    const c = loadCon().find(x => x.id === id);
+    if (!c) return;
+    const rb = c.risk === 'High' ? 'b-red' : c.risk === 'Medium' ? 'b-amber' : 'b-green';
+    document.getElementById('modal-title').textContent = c.name;
+    document.getElementById('modal-sub').textContent = 'Contract details and negotiation status';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="mrow"><span class="mrl">Vendor</span><span style="font-weight:500">${c.vendor}</span></div>
+      <div class="mrow"><span class="mrl">Annual Value</span><span style="font-weight:600">${c.value}</span></div>
+      <div class="mrow"><span class="mrl">Renewal Date</span><span>${c.renewal}</span></div>
+      <div class="mrow"><span class="mrl">Risk Level</span><span class="badge ${rb}">${c.risk}</span></div>
+      <div class="mrow"><span class="mrl">AI Review</span><span style="color:#1d4ed8;font-weight:500">In progress</span></div>
+      <div class="mrow"><span class="mrl">Source</span><span class="badge b-slate">${c.type === 'uploaded' ? 'File Upload' : c.type === 'new' ? 'New Negotiation' : 'Default'}</span></div>`;
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+  function openNewNegModal() {
+    document.getElementById('nv-vendor').value = '';
+    document.getElementById('nv-value').value = '';
+    document.getElementById('nv-renewal').value = '';
+    document.getElementById('nv-goal').value = '';
+    document.getElementById('neg-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('nv-vendor').focus(), 80);
+  }
+  function closeNegModal() { document.getElementById('neg-modal').style.display = 'none'; }
+
+  function saveNegotiation() {
+    const vendor  = document.getElementById('nv-vendor').value.trim();
+    const cat     = document.getElementById('nv-cat').value;
+    const risk    = document.getElementById('nv-risk').value;
+    const val     = document.getElementById('nv-value').value;
+    const renewal = document.getElementById('nv-renewal').value;
+    const goal    = document.getElementById('nv-goal').value.trim();
+    if (!vendor) { toast('Please enter a vendor name', true); return; }
+    const negs = loadNeg();
+    const id = Date.now();
+    const annual = val ? '$' + parseInt(val).toLocaleString() + '/yr' : 'TBD';
+    const renewalFmt = renewal ? new Date(renewal + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'TBD';
+    negs.push({ id, vendor, category:cat, status:'Analysis', score: Math.round(60 + Math.random() * 25), annual, renewal:renewalFmt, goal: goal || 'Best available discount' });
+    saveNeg(negs);
+    const cons = loadCon();
+    cons.push({ id, name: vendor + ' Agreement', vendor, renewal:renewalFmt, value:annual, risk, type:'new' });
+    saveCon(cons);
+    closeNegModal();
+    renderNegTable();
+    toast('Negotiation saved — AI agent deployed for ' + vendor);
+  }
+
+  function handleUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+    const display = baseName.charAt(0).toUpperCase() + baseName.slice(1);
+    const vendor = display.split(' ').slice(0, 2).join(' ');
+    const id = Date.now();
+    const cons = loadCon();
+    cons.push({ id, name: display, vendor, renewal: 'Pending Review', value: 'Pending Review', risk: 'Medium', type: 'uploaded' });
+    saveCon(cons);
+    const negs = loadNeg();
+    negs.push({ id, vendor, category: 'Other', status: 'Analysis', score: Math.round(55 + Math.random() * 20), annual: 'Pending', renewal: 'TBD', goal: 'Review contract terms' });
+    saveNeg(negs);
+    renderContracts();
+    renderNegTable();
+    e.target.value = '';
+    toast('Contract uploaded: ' + file.name);
+  }
+
+  function sendInstruction() {
+    const v = document.getElementById('ai-prompt').value.trim();
+    if (!v) return;
+    const ca = document.getElementById('chat-area');
+    const d = document.createElement('div');
+    d.innerHTML = `<div class="clbl">Negotio AI Agent</div><div class="cmsg ca">Instruction received. Now processing: "${v.substring(0,70)}${v.length > 70 ? '...' : ''}"</div>`;
+    ca.appendChild(d);
+    ca.scrollTop = ca.scrollHeight;
+    toast('Instruction sent to AI agent');
+  }
+
+  function clearAllData() {
+    if (!confirm('Clear all locally stored negotiations and contracts? Default data will reload.')) return;
+    try { localStorage.removeItem(LS_NEG); localStorage.removeItem(LS_CON); } catch {}
+    renderNegTable(); renderChart(); renderContracts(); renderAgents();
+    toast('All local data cleared — defaults restored');
+  }
+
+  function exportData() {
+    const data = { negotiations: loadNeg(), contracts: loadCon(), exported: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'negotio-data.json'; a.click();
+    URL.revokeObjectURL(url);
+    toast('Data exported as negotio-data.json');
+  }
+
+  // Boot
+  renderNegTable();
+  renderChart();
+</script>
+</body>
+</html>
