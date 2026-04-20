@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eco-Cloud Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2128;
+    --bg4: #21262d;
+    --border: #30363d;
+    --border2: #3d444d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #656d76;
+    --green: #2ea043;
+    --green2: #3fb950;
+    --green3: #0d4a1f;
+    --green4: #1a6b2e;
+    --blue: #1f6feb;
+    --blue2: #388bfd;
+    --blue3: #0c2d6b;
+    --teal: #1abc9c;
+    --amber: #d29922;
+    --amber2: #e3b341;
+    --red: #da3633;
+    --red2: #f85149;
+    --purple: #7948d9;
+    --purple2: #a855f7;
+    --accent-glow: rgba(46,160,67,0.15);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--green3), var(--green4));
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo span { color: var(--green2); }
+
+  .top-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--green3);
+    color: var(--green2);
+    border: 1px solid var(--green4);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(46,160,67,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--green2), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--text2);
+    font-size: 1.1rem;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+
+  .predictor-box {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .predictor-box::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, rgba(46,160,67,0.3), transparent 60%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .predictor-box:focus-within::before { opacity: 1; }
+
+  .predictor-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green2);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .predictor-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green2);
+    box-shadow: 0 0 6px var(--green2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 1rem;
+    resize: none;
+    height: 110px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea:focus { border-color: var(--green); }
+  textarea::placeholder { color: var(--text3); }
+
+  .quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0.75rem 0 1.25rem;
+  }
+
+  .chip {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .chip:hover {
+    border-color: var(--green);
+    color: var(--green2);
+    background: var(--green3);
+  }
+
+  .calc-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--green);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .calc-btn:hover { background: var(--green2); transform: translateY(-1px); }
+  .calc-btn:active { transform: scale(0.98); }
+  .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .calc-btn .btn-icon { margin-right: 8px; }
+
+  .section {
+    max-width: 1100px;
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  #results { display: none; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    border-radius: 12px 0 0 12px;
+  }
+
+  .stat-card.accent-green::after { background: var(--green); }
+  .stat-card.accent-blue::after { background: var(--blue2); }
+  .stat-card.accent-amber::after { background: var(--amber2); }
+  .stat-card.accent-red::after { background: var(--red2); }
+  .stat-card.accent-purple::after { background: var(--purple2); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 0.3rem;
+  }
+
+  .breakdown-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .breakdown-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .breakdown-row {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+    transition: background 0.15s;
+  }
+
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row:hover { background: var(--bg3); }
+
+  .breakdown-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .breakdown-name { flex: 1; }
+  .breakdown-name strong { display: block; font-size: 0.9rem; }
+  .breakdown-name span { font-size: 12px; color: var(--text2); }
+
+  .breakdown-bar-wrap { flex: 2; }
+
+  .breakdown-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bg4);
+    overflow: hidden;
+  }
+
+  .breakdown-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .breakdown-cost {
+    font-size: 0.95rem;
+    font-weight: 600;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tag-red { background: rgba(218,54,51,0.15); color: var(--red2); border: 1px solid rgba(218,54,51,0.3); }
+  .tag-amber { background: rgba(227,179,65,0.12); color: var(--amber2); border: 1px solid rgba(227,179,65,0.25); }
+  .tag-green { background: rgba(46,160,67,0.15); color: var(--green2); border: 1px solid rgba(46,160,67,0.3); }
+  .tag-blue { background: rgba(31,111,235,0.12); color: var(--blue2); border: 1px solid rgba(31,111,235,0.25); }
+
+  .sustainability-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .grade-circle {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    font-weight: 800;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    border: 3px solid;
+    line-height: 1;
+  }
+
+  .grade-circle small { font-size: 10px; font-weight: 500; margin-top: 2px; }
+
+  .grade-A { color: var(--teal); border-color: var(--teal); background: rgba(26,188,156,0.08); }
+  .grade-B { color: var(--green2); border-color: var(--green2); background: rgba(63,185,80,0.08); }
+  .grade-C { color: var(--amber2); border-color: var(--amber2); background: rgba(227,179,65,0.08); }
+  .grade-D { color: var(--red2); border-color: var(--red2); background: rgba(248,81,73,0.08); }
+
+  .sustainability-info { flex: 1; min-width: 200px; }
+  .sustainability-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .sustainability-info p { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+
+  .suggestions { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 6px; }
+
+  .suggestion-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text2);
+    padding: 6px 10px;
+    background: var(--bg3);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .suggestion-item::before {
+    content: '→';
+    color: var(--green2);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .score-bar-wrap { margin-top: 0.75rem; }
+  .score-bar-label { font-size: 12px; color: var(--text3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .score-bar { height: 8px; border-radius: 4px; background: var(--bg4); overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg2);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .compare-table th {
+    padding: 0.9rem 1.25rem;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table th:first-child { color: var(--text3); }
+  .compare-table th.aws { color: var(--amber2); background: rgba(227,179,65,0.05); }
+  .compare-table th.gcp { color: var(--teal); background: rgba(26,188,156,0.05); }
+
+  .compare-table td {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .compare-table td:first-child { color: var(--text2); font-size: 0.85rem; font-weight: 500; }
+  .compare-table td.aws { background: rgba(227,179,65,0.03); }
+  .compare-table td.gcp { background: rgba(26,188,156,0.03); }
+
+  .winner-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: rgba(26,188,156,0.15);
+    color: var(--teal);
+    border: 1px solid rgba(26,188,156,0.3);
+    font-weight: 700;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .rating-bar {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rating-dots { display: flex; gap: 3px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .energy-bar { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .energy-fill { height: 6px; border-radius: 3px; }
+
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .insight-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    font-size: 0.88rem;
+  }
+
+  .insight-card .insight-icon {
+    font-size: 24px;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .insight-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .insight-card p { color: var(--text2); line-height: 1.55; }
+
+  .cost-highlight {
+    display: inline;
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, var(--green2), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    backdrop-filter: blur(4px);
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .loader-ring {
+    width: 50px; height: 50px;
+    border: 3px solid var(--border);
+    border-top-color: var(--green2);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-overlay p { color: var(--text2); font-size: 0.9rem; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    color: var(--text3);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .breakdown-bar-wrap { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    Eco-Cloud <span>Dashboard</span>
+  </div>
+  <div class="top-badge">LIVE ESTIMATOR</div>
+</div>
+
+<div class="hero">
+  <h1>Smart Cost Estimation<br>for <em>Sustainable AI</em> Infrastructure</h1>
+  <p>Describe your project and get an instant cost breakdown with sustainability scoring and cloud platform comparison.</p>
+
+  <div class="predictor-box">
+    <div class="predictor-label">Cloud Impact Predictor</div>
+    <textarea id="projectInput" placeholder="e.g., I am building an autonomous AI system for real-time traffic monitoring using machine learning models..."></textarea>
+
+    <div class="quick-chips">
+      <div class="chip" onclick="fillExample('ai')">🤖 AI / ML Project</div>
+      <div class="chip" onclick="fillExample('autonomous')">🚗 Autonomous System</div>
+      <div class="chip" onclick="fillExample('realtime')">⚡ Real-time App</div>
+      <div class="chip" onclick="fillExample('basic')">📝 Basic Blog / CMS</div>
+      <div class="chip" onclick="fillExample('static')">🌐 Static Website</div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()" id="calcBtn">
+      <span class="btn-icon">⚡</span> Calculate Cloud Impact
+    </button>
+  </div>
+</div>
+
+<div id="results">
+
+  <div class="section">
+    <div class="section-title">Cost Overview</div>
+    <div class="stats-grid">
+      <div class="stat-card accent-green">
+        <div class="stat-label">Total Monthly Cost</div>
+        <div class="stat-value"><span class="cost-highlight" id="totalCost">$0.00</span></div>
+        <div class="stat-sub" id="costTier">Calculating...</div>
+      </div>
+      <div class="stat-card accent-blue">
+        <div class="stat-label">Sustainability Score</div>
+        <div class="stat-value" id="sustainScore" style="font-size:1.5rem">—</div>
+        <div class="stat-sub" id="sustainLabel">—</div>
+      </div>
+      <div class="stat-card accent-amber">
+        <div class="stat-label">Infrastructure Tier</div>
+        <div class="stat-value" id="infraTier" style="font-size:1.3rem">—</div>
+        <div class="stat-sub" id="infraDesc">—</div>
+      </div>
+      <div class="stat-card accent-purple">
+        <div class="stat-label">Annual Projection</div>
+        <div class="stat-value" id="annualCost" style="font-size:1.5rem">—</div>
+        <div class="stat-sub">Based on current estimate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Cost Breakdown</div>
+    <div class="breakdown-card">
+      <div class="breakdown-header">
+        <span>Monthly Spending Allocation</span>
+        <span id="breakdownTotal" style="color:var(--green2);font-size:0.9rem"></span>
+      </div>
+
+      <div class="breakdown-row">
+        <div class="breakdown-icon" style="background:rgba(31,111,235,0.12); color:var(--blue2);">💻</div>
+        <div class="breakdown-name">
+          <strong>Compute</strong>
+          <span id="computeDesc">CPU/GPU instances</span>
+        </div>
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-bar"><div class="breakdown-bar-fill" id="computeBar" style="background:var(--blue2); width:0%"></div></div>
+        </div>
+        <span id="computeTag" class="tag">—</span>
+        <div class="breakdown-cost" id="computeCost">$0.00</div>
+      </div>
+
+      <div class="breakdown-row">
+        <div class="breakdown-icon" style="background:rgba(210,153,34,0.12); color:var(--amber2);">🗄️</div>
+        <div class="breakdown-name">
+          <strong>Storage</strong>
+          <span id="storageDesc">SSD / Object storage</span>
+        </div>
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-bar"><div class="breakdown-bar-fill" id="storageBar" style="background:var(--amber2); width:0%"></div></div>
+        </div>
+        <span id="storageTag" class="tag">—</span>
+        <div class="breakdown-cost" id="storageCost">$0.00</div>
+      </div>
+
+      <div class="breakdown-row">
+        <div class="breakdown-icon" style="background:rgba(26,188,156,0.12); color:var(--teal);">🌐</div>
+        <div class="breakdown-name">
+          <strong>Data Transfer</strong>
+          <span id="transferDesc">Global egress</span>
+        </div>
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-bar"><div class="breakdown-bar-fill" id="transferBar" style="background:var(--teal); width:0%"></div></div>
+        </div>
+        <span id="transferTag" class="tag">—</span>
+        <div class="breakdown-cost" id="transferCost">$0.00</div>
+      </div>
+
+      <div class="breakdown-row">
+        <div class="breakdown-icon" style="background:rgba(168,85,247,0.12); color:var(--purple2);">🔧</div>
+        <div class="breakdown-name">
+          <strong>Managed Services</strong>
+          <span id="servicesDesc">APIs, monitoring</span>
+        </div>
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-bar"><div class="breakdown-bar-fill" id="servicesBar" style="background:var(--purple2); width:0%"></div></div>
+        </div>
+        <span id="servicesTag" class="tag">—</span>
+        <div class="breakdown-cost" id="servicesCost">$0.00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sustainability Analysis</div>
+    <div class="sustainability-card">
+      <div class="grade-circle" id="gradeCircle">
+        <span id="gradeText">—</span>
+        <small>GRADE</small>
+      </div>
+      <div class="sustainability-info">
+        <h3 id="sustainTitle">Analyzing sustainability profile...</h3>
+        <p id="sustainDesc">—</p>
+        <div class="score-bar-wrap">
+          <div class="score-bar-label"><span>Carbon Efficiency</span><span id="carbonScore">—</span></div>
+          <div class="score-bar" style="margin-bottom:8px"><div class="score-bar-fill" id="carbonBar" style="background:var(--green2); width:0%"></div></div>
+          <div class="score-bar-label"><span>Energy Optimization</span><span id="energyScore">—</span></div>
+          <div class="score-bar"><div class="score-bar-fill" id="energyBar" style="background:var(--teal); width:0%"></div></div>
+        </div>
+        <div class="suggestions" id="suggestionsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Platform Comparison</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="aws">☁ AWS — High Performance</th>
+          <th class="gcp">🌿 Google Cloud — Eco-Friendly</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Monthly Price</td>
+          <td class="aws"><strong id="awsPrice">—</strong></td>
+          <td class="gcp"><strong id="gcpPrice">—</strong> <span class="winner-badge" id="priceWinner">BEST VALUE</span></td>
+        </tr>
+        <tr>
+          <td>Scalability</td>
+          <td class="aws" id="awsScale">—</td>
+          <td class="gcp" id="gcpScale">—</td>
+        </tr>
+        <tr>
+          <td>Performance</td>
+          <td class="aws" id="awsPerf">—</td>
+          <td class="gcp" id="gcpPerf">—</td>
+        </tr>
+        <tr>
+          <td>Energy Source</td>
+          <td class="aws" id="awsEnergy">—</td>
+          <td class="gcp" id="gcpEnergy">—</td>
+        </tr>
+        <tr>
+          <td>Best For</td>
+          <td class="aws" id="awsBest">—</td>
+          <td class="gcp" id="gcpBest">—</td>
+        </tr>
+        <tr>
+          <td>Carbon Offset</td>
+          <td class="aws" id="awsCarbon">—</td>
+          <td class="gcp" id="gcpCarbon">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Optimization Insights</div>
+    <div class="insight-grid" id="insightGrid"></div>
+  </div>
+
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p id="loadingText">Analyzing infrastructure requirements...</p>
+</div>
+
+<div class="footer">
+  Eco-Cloud Dashboard — Smart Cost Estimation & Sustainable AI Infrastructure<br>
+  Estimates based on logical analysis of project requirements. Actual costs may vary by region and usage.
+</div>
+
+<script>
+const examples = {
+  ai: "I am building an autonomous AI system with real-time machine learning models for intelligent traffic monitoring and prediction.",
+  autonomous: "Building an autonomous drone fleet management system with edge computing and real-time coordination.",
+  realtime: "Developing a real-time multiplayer gaming platform with live leaderboards and instant notifications.",
+  basic: "Creating a basic blog and portfolio website with a simple CMS and contact form.",
+  static: "Building a static marketing website with a CDN and minimal server-side processing."
+};
+
+function fillExample(key) {
+  document.getElementById('projectInput').value = examples[key];
+  document.getElementById('projectInput').focus();
+}
+
+function analyzeText(text) {
+  const t = text.toLowerCase();
+  let base = 42.55;
+  let compute = 28.40, storage = 9.80, transfer = 3.20, services = 1.15;
+  let sustainScore = 85;
+  let tier = "Standard";
+  let tierDesc = "Microservice architecture";
+  let grade = "B+";
+  let keywords = [];
+
+  const hasAI = t.includes("ai") || t.includes("machine learning") || t.includes("ml") || t.includes("neural") || t.includes("model");
+  const hasAutonomous = t.includes("autonomous") || t.includes("drone") || t.includes("self-driving") || t.includes("robotics");
+  const hasRealtime = t.includes("real-time") || t.includes("realtime") || t.includes("live") || t.includes("streaming") || t.includes("instant");
+  const hasBasic = t.includes("basic") || t.includes("blog") || t.includes("portfolio") || t.includes("cms");
+  const hasStatic = t.includes("static") || t.includes("landing") || t.includes("cdn");
+
+  if (hasAI) {
+    base += 245.82; compute += 198.50; storage += 42.20; transfer += 4.80; services += 0.32;
+    sustainScore -= 20;
+    keywords.push("AI/ML workload detected — GPU cluster provisioning required");
+    tier = "GPU Cluster"; tierDesc = "High-performance ML training";
+    grade = "C+";
+  }
+  if (hasAutonomous) {
+    base += 132.14; compute += 88.40; storage += 31.50; transfer += 11.20; services += 1.04;
+    sustainScore -= 15;
+    keywords.push("Autonomous system — edge computing and data mesh required");
+    tier = "Edge + Cloud"; tierDesc = "Distributed edge processing";
+    if (grade === "C+") grade = "D+"; else grade = "C";
+  }
+  if (hasRealtime) {
+    base += 88.45; compute += 42.10; storage += 18.20; transfer += 24.80; services += 3.35;
+    sustainScore -= 5;
+    keywords.push("Real-time processing — low-latency always-on tiers added");
+    if (tier === "Standard") { tier = "Always-On"; tierDesc = "Low-latency microservices"; }
+    if (grade === "B+") grade = "B-";
+  }
+  if (hasBasic) {
+    base -= 15.20; compute -= 12.40; storage -= 1.50; transfer -= 1.00; services -= 0.30;
+    sustainScore += 15;
+    keywords.push("Basic workload — serverless and managed hosting selected");
+    tier = "Serverless"; tierDesc = "Cost-optimized hosting";
+    grade = "A-";
+  }
+  if (hasStatic) {
+    base -= 25.20; compute -= 18.50; storage -= 4.40; transfer -= 2.00; services -= 0.30;
+    sustainScore += 20;
+    keywords.push("Static content — CDN-only delivery, minimal compute");
+    tier = "CDN"; tierDesc = "Pure CDN delivery";
+    grade = "A+";
+  }
+
+  if (!hasAI && !hasAutonomous && !hasRealtime && !hasBasic && !hasStatic) {
+    base += 45.12; compute += 28.40; storage += 12.30; transfer += 3.80; services += 0.62;
+    keywords.push("Standard microservice architecture recommended");
+  }
+
+  base = Math.max(base, 5.00);
+  compute = Math.max(compute, 2.00);
+  storage = Math.max(storage, 1.00);
+  transfer = Math.max(transfer, 0.50);
+  services = Math.max(services, 0.50);
+  sustainScore = Math.max(Math.min(sustainScore, 100), 10);
+
+  const total = base;
+  const awsPrice = total * 1.055;
+  const gcpPrice = total * 0.98;
+
+  return { total, compute, storage, transfer, services, sustainScore, tier, tierDesc, grade, keywords, awsPrice, gcpPrice, hasAI, hasAutonomous, hasRealtime, hasBasic, hasStatic };
+}
+
+function getGradeClass(grade) {
+  if (grade.startsWith("A")) return "grade-A";
+  if (grade.startsWith("B")) return "grade-B";
+  if (grade.startsWith("C")) return "grade-C";
+  return "grade-D";
+}
+
+function getRatingDots(score, total, color) {
+  let html = `<div class="rating-bar"><div class="rating-dots">`;
+  for (let i = 1; i <= total; i++) {
+    html += `<div class="dot" style="background: ${i <= score ? color : 'var(--bg4)'}"></div>`;
+  }
+  return html + `</div> <span style="font-size:12px;color:var(--text2)">${score}/${total}</span></div>`;
+}
+
+function loadingMessages(r) {
+  const msgs = [
+    "Analyzing infrastructure requirements...",
+    "Mapping resource dependencies...",
+    "Computing sustainability metrics...",
+    "Benchmarking cloud providers..."
+  ];
+  let i = 0;
+  return setInterval(() => {
+    i = (i + 1) % msgs.length;
+    document.getElementById('loadingText').textContent = msgs[i];
+  }, 600);
+}
+
+function calculate() {
+  const text = document.getElementById('projectInput').value.trim();
+  if (!text || text.length < 10) {
+    document.getElementById('projectInput').style.borderColor = 'var(--red)';
+    setTimeout(() => document.getElementById('projectInput').style.borderColor = '', 1500);
+    return;
+  }
+
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('active');
+  document.getElementById('calcBtn').disabled = true;
+  const interval = loadingMessages();
+
+  setTimeout(() => {
+    clearInterval(interval);
+    overlay.classList.remove('active');
+    document.getElementById('calcBtn').disabled = false;
+
+    const r = analyzeText(text);
+    renderResults(r);
+  }, 1800);
+}
+
+function renderResults(r) {
+  const total = r.total;
+
+  document.getElementById('totalCost').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('costTier').textContent = `${r.tier} — ${r.tierDesc}`;
+  document.getElementById('sustainScore').textContent = `${r.sustainScore}/100`;
+  document.getElementById('sustainLabel').textContent = r.sustainScore >= 80 ? 'Excellent efficiency' : r.sustainScore >= 60 ? 'Good efficiency' : r.sustainScore >= 40 ? 'Moderate impact' : 'High carbon footprint';
+  document.getElementById('infraTier').textContent = r.tier;
+  document.getElementById('infraDesc').textContent = r.tierDesc;
+  document.getElementById('annualCost').textContent = `$${(total * 12).toFixed(2)}`;
+  document.getElementById('breakdownTotal').textContent = `Total: $${total.toFixed(2)}/mo`;
+
+  const totalForBars = r.compute + r.storage + r.transfer + r.services;
+
+  document.getElementById('computeCost').textContent = `$${r.compute.toFixed(2)}`;
+  document.getElementById('storageCost').textContent = `$${r.storage.toFixed(2)}`;
+  document.getElementById('transferCost').textContent = `$${r.transfer.toFixed(2)}`;
+  document.getElementById('servicesCost').textContent = `$${r.services.toFixed(2)}`;
+
+  document.getElementById('computeDesc').textContent = r.hasAI ? 'GPU instances (ML training)' : r.hasAutonomous ? 'Edge + Cloud compute' : 'vCPU instances';
+  document.getElementById('storageDesc').textContent = r.hasAI ? 'Model storage (SSD Premium)' : r.hasStatic ? 'CDN object storage' : 'SSD block storage';
+  document.getElementById('transferDesc').textContent = r.hasRealtime ? 'Real-time stream egress' : 'Global CDN egress';
+  document.getElementById('servicesDesc').textContent = r.hasAI ? 'AI APIs, AutoML, logging' : 'Monitoring, DNS, misc';
+
+  setTimeout(() => {
+    document.getElementById('computeBar').style.width = `${(r.compute / totalForBars * 100).toFixed(1)}%`;
+    document.getElementById('storageBar').style.width = `${(r.storage / totalForBars * 100).toFixed(1)}%`;
+    document.getElementById('transferBar').style.width = `${(r.transfer / totalForBars * 100).toFixed(1)}%`;
+    document.getElementById('servicesBar').style.width = `${(r.services / totalForBars * 100).toFixed(1)}%`;
+  }, 200);
+
+  const computeIntensity = r.compute > 150 ? ['tag-red', 'High Intensity'] : r.compute > 60 ? ['tag-amber', 'Medium'] : ['tag-green', 'Low Load'];
+  const storageType = r.hasAI ? ['tag-amber', 'SSD Premium'] : r.hasStatic ? ['tag-green', 'CDN Only'] : ['tag-blue', 'Standard SSD'];
+  const transferType = r.hasRealtime ? ['tag-red', 'Always-On'] : ['tag-blue', 'Standard Egress'];
+  const servicesType = r.hasAI ? ['tag-amber', 'AI APIs'] : ['tag-green', 'Managed'];
+
+  document.getElementById('computeTag').className = `tag ${computeIntensity[0]}`;
+  document.getElementById('computeTag').textContent = computeIntensity[1];
+  document.getElementById('storageTag').className = `tag ${storageType[0]}`;
+  document.getElementById('storageTag').textContent = storageType[1];
+  document.getElementById('transferTag').className = `tag ${transferType[0]}`;
+  document.getElementById('transferTag').textContent = transferType[1];
+  document.getElementById('servicesTag').className = `tag ${servicesType[0]}`;
+  document.getElementById('servicesTag').textContent = servicesType[1];
+
+  const gc = document.getElementById('gradeCircle');
+  gc.className = `grade-circle ${getGradeClass(r.grade)}`;
+  document.getElementById('gradeText').textContent = r.grade;
+
+  document.getElementById('sustainTitle').textContent =
+    r.sustainScore >= 80 ? 'High Sustainability Profile' :
+    r.sustainScore >= 60 ? 'Moderate Sustainability Profile' :
+    r.sustainScore >= 40 ? 'Carbon-Intensive Workload' : 'High Environmental Impact';
+
+  document.getElementById('sustainDesc').textContent =
+    r.hasAI && r.hasRealtime ? 'GPU-intensive ML pipelines with always-on real-time streams generate significant carbon footprint. Token optimization and batch inference can reduce this substantially.' :
+    r.hasAI ? 'Machine learning workloads require high GPU utilization. Consider spot instances and scheduled batch jobs to reduce costs and carbon emissions.' :
+    r.hasStatic || r.hasBasic ? 'This architecture is highly efficient. CDN-first delivery and serverless compute represent best-in-class sustainability patterns.' :
+    'Standard microservice workload with moderate sustainability impact. Autoscaling and reserved instances can improve both cost and carbon efficiency.';
+
+  const carbonEff = Math.min(r.sustainScore + 5, 100);
+  const energyEff = Math.min(r.sustainScore - 8, 100);
+
+  document.getElementById('carbonScore').textContent = `${carbonEff}%`;
+  document.getElementById('energyScore').textContent = `${Math.max(energyEff, 10)}%`;
+
+  setTimeout(() => {
+    document.getElementById('carbonBar').style.width = `${carbonEff}%`;
+    document.getElementById('energyBar').style.width = `${Math.max(energyEff, 10)}%`;
+  }, 300);
+
+  const suggestions = [];
+  if (r.hasAI) suggestions.push("Enable Token Optimization to reduce GPU compute by ~30%", "Switch to batch inference for non-real-time predictions");
+  if (r.hasRealtime) suggestions.push("Use WebSocket multiplexing to reduce always-on overhead");
+  if (r.hasAutonomous) suggestions.push("Implement edge caching to reduce cloud round-trips");
+  if (!r.hasStatic && !r.hasBasic) suggestions.push("Use spot/preemptible instances for non-critical workloads");
+  if (r.sustainScore < 70) suggestions.push("Enable carbon-aware scheduling with GCP's Carbon-Free Energy API");
+
+  const sl = document.getElementById('suggestionsList');
+  sl.innerHTML = suggestions.slice(0, 3).map(s => `<div class="suggestion-item">${s}</div>`).join('');
+
+  document.getElementById('awsPrice').textContent = `$${r.awsPrice.toFixed(2)}/mo`;
+  document.getElementById('gcpPrice').textContent = `$${r.gcpPrice.toFixed(2)}/mo`;
+
+  const awsScaleRating = r.hasAI ? 9.8 : r.hasRealtime ? 9.3 : 8.5;
+  const gcpScaleRating = r.hasAI ? 9.2 : r.hasRealtime ? 9.6 : 8.8;
+
+  document.getElementById('awsScale').innerHTML = getRatingDots(Math.round(awsScaleRating), 10, 'var(--amber2)');
+  document.getElementById('gcpScale').innerHTML = getRatingDots(Math.round(gcpScaleRating), 10, 'var(--teal)');
+
+  document.getElementById('awsPerf').textContent = r.hasAI ? 'Optimized for GPU (NVIDIA A100)' : r.hasRealtime ? 'Nitro-enhanced networking' : 'General purpose compute';
+  document.getElementById('gcpPerf').textContent = r.hasAI ? 'Optimized for TPU v4 clusters' : r.hasRealtime ? 'Premium network tier' : 'Custom Arm instances';
+
+  document.getElementById('awsEnergy').innerHTML = `<div class="energy-bar"><div class="energy-fill" style="width:52px; height:6px; border-radius:3px; background:var(--amber2)"></div> <span>65% Renewable</span></div>`;
+  document.getElementById('gcpEnergy').innerHTML = `<div class="energy-bar"><div class="energy-fill" style="width:80px; height:6px; border-radius:3px; background:var(--teal)"></div> <span>100% Renewable ✓</span></div>`;
+
+  document.getElementById('awsBest').textContent = r.hasAI ? 'GPU-heavy ML training' : r.hasAutonomous ? 'IoT + edge hybrid' : 'Enterprise reliability';
+  document.getElementById('gcpBest').textContent = r.hasAI ? 'TPU inference at scale' : r.hasRealtime ? 'Global low-latency' : 'Sustainable production';
+
+  document.getElementById('awsCarbon').textContent = 'Partial offset via AWS Climate Pledge';
+  document.getElementById('gcpCarbon').innerHTML = 'Net-zero since 2007 <span class="tag tag-green">Carbon Neutral</span>';
+
+  const insights = [];
+  if (r.hasAI) {
+    insights.push({ icon: '🧠', title: 'GPU Optimization', text: 'Enable mixed-precision training (FP16) to cut compute costs by up to 40% with minimal accuracy loss.' });
+    insights.push({ icon: '📦', title: 'Model Compression', text: 'Apply quantization and pruning to reduce model size by 70%, cutting both storage and inference costs.' });
+  }
+  if (r.hasRealtime) {
+    insights.push({ icon: '⚡', title: 'Edge Caching', text: 'Deploy a CDN edge layer to serve 80% of requests locally, reducing origin load and egress fees.' });
+  }
+  if (r.hasBasic || r.hasStatic) {
+    insights.push({ icon: '🌿', title: 'Serverless First', text: 'Your workload is ideal for serverless — zero idle cost, sub-second cold starts, and auto-scaling built in.' });
+    insights.push({ icon: '♻️', title: 'Green Architecture', text: 'CDN-first patterns reduce data center energy by eliminating redundant compute for every request.' });
+  }
+  if (!r.hasAI && !r.hasBasic && !r.hasStatic) {
+    insights.push({ icon: '📊', title: 'Right-sizing', text: 'Most teams overprovision by 40%. Use cloud monitoring to identify idle resources and downsize them.' });
+    insights.push({ icon: '💰', title: 'Reserved Instances', text: 'Commit to 1-year reserved instances for baseline load to save 30-40% vs on-demand pricing.' });
+  }
+  insights.push({ icon: '🔍', title: 'Cost Anomaly Detection', text: 'Enable automated cost alerts at 20% above your baseline to catch unexpected spikes early.' });
+
+  document.getElementById('insightGrid').innerHTML = insights.slice(0, 4).map(i => `
+    <div class="insight-card">
+      <span class="insight-icon">${i.icon}</span>
+      <h4>${i.title}</h4>
+      <p>${i.text}</p>
+    </div>
+  `).join('');
+
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+document.getElementById('projectInput').addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'Enter') calculate();
+});
+</script>
+</body>
+</html>
