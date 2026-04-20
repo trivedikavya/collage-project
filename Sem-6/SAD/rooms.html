@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CANVAS – Find a Space</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body { padding-top: 80px; }
+    .user-pill { display:flex; align-items:center; gap:10px; background:var(--bg3); border:1px solid var(--border); border-radius:50px; padding:6px 16px 6px 6px; cursor:pointer; transition:all 0.2s; }
+    .user-pill:hover { border-color:var(--gold); }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; color:#0d0d0d; }
+    .nav-user { position:relative; }
+    .user-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); min-width:200px; overflow:hidden; display:none; z-index:200; box-shadow:0 16px 40px rgba(0,0,0,0.5); }
+    .user-menu.open { display:block; animation:pageFade 0.2s ease; }
+    .user-menu a { display:flex; align-items:center; gap:10px; padding:13px 18px; color:var(--text); font-size:0.88rem; transition:background 0.15s; }
+    .user-menu a:hover { background:rgba(255,255,255,0.04); }
+    .user-menu .separator { height:1px; background:var(--border); }
+
+    .page-header {
+      padding: 60px 80px 40px;
+      background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 { font-size: 2.8rem; margin-bottom: 10px; }
+    .page-header p { color: var(--muted); }
+
+    .search-bar {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 20px;
+      margin-top: 28px; max-width: 560px;
+    }
+    .search-bar input {
+      background: none; border: none; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      outline: none; flex: 1;
+    }
+    .search-bar input::placeholder { color: var(--muted); }
+
+    .filter-tabs {
+      display: flex; gap: 10px; padding: 28px 80px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      flex-wrap: wrap;
+    }
+    .ftab {
+      padding: 9px 22px; border-radius: 50px;
+      background: var(--bg3); border: 1.5px solid var(--border);
+      color: var(--muted); font-size: 0.85rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ftab.active { background: var(--gold-dim); border-color: rgba(201,168,76,0.4); color: var(--gold); }
+    .ftab:hover:not(.active) { border-color: rgba(255,255,255,0.15); color: var(--text); }
+
+    .rooms-layout { display: flex; gap: 32px; padding: 40px 80px; }
+    
+    .sidebar {
+      width: 240px; flex-shrink: 0;
+    }
+    .sidebar-section { margin-bottom: 32px; }
+    .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+    .price-range { display: flex; flex-direction: column; gap: 10px; }
+    .price-range input[type=range] {
+      width: 100%; accent-color: var(--gold);
+      background: transparent;
+    }
+    .price-display { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.82rem; }
+    .cap-filter { display: flex; flex-direction: column; gap: 8px; }
+    .cap-opt {
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(240,236,228,0.7); font-size: 0.87rem;
+      cursor: pointer; padding: 4px 0;
+    }
+    .cap-opt input { accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer; }
+
+    .rooms-list { flex: 1; }
+    .results-count { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+
+    .room-row {
+      display: flex; gap: 24px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      margin-bottom: 20px; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .room-row:hover { border-color: rgba(201,168,76,0.35); transform: translateX(4px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .room-row-thumb {
+      width: 200px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+    }
+    .room-row-body { flex: 1; padding: 24px 24px 24px 0; display: flex; flex-direction: column; justify-content: space-between; }
+    .room-row-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .room-row-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; }
+    .room-row-theme { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+    .room-row-desc { font-size: 0.87rem; color: rgba(240,236,228,0.65); line-height: 1.55; margin-bottom: 16px; }
+    .includes-list { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .include-chip {
+      padding: 4px 12px; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 50px;
+      font-size: 0.75rem; color: var(--muted);
+    }
+    .room-row-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
+    .price-big { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+    .price-big span { font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+    .capacity-info { color: var(--muted); font-size: 0.82rem; }
+    .book-btn {
+      padding: 10px 28px; border-radius: 50px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #0d0d0d; font-weight: 700; font-size: 0.88rem;
+      border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .book-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(201,168,76,0.35); }
+
+    .no-results { text-align: center; padding: 80px 40px; color: var(--muted); }
+    .no-results div { font-size: 3rem; margin-bottom: 16px; }
+
+    @media (max-width: 1100px) {
+      .page-header, .filter-tabs, .rooms-layout { padding-left: 40px; padding-right: 40px; }
+      .sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+      .page-header, .filter-tabs, .rooms-layout { padding-left: 20px; padding-right: 20px; }
+      .room-row { flex-direction: column; }
+      .room-row-thumb { width: 100%; height: 160px; }
+      .room-row-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><a href="home.html">CANVAS</a></div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="rooms.html" style="color:var(--gold)">Spaces</a>
+    <a href="mybookings.html">My Bookings</a>
+    <div class="nav-user">
+      <div class="user-pill" onclick="toggleMenu()">
+        <div class="avatar" id="user-initial">C</div>
+        <span id="user-name-nav">Creator</span>
+        <span style="color:var(--muted);font-size:0.8rem;">▾</span>
+      </div>
+      <div class="user-menu" id="user-menu">
+        <a href="mybookings.html">📋 My Bookings</a>
+        <a href="#">👤 Profile</a>
+        <div class="separator"></div>
+        <a href="#" onclick="Canvas.logout()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header page-fade">
+  <div style="font-size:0.75rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px;">
+    <a href="home.html" style="color:var(--muted)">Home</a> / Find a Space
+  </div>
+  <h1>Find a Space <span style="color:var(--muted); font-size:1.2rem; font-weight:400;">— 5 rooms</span></h1>
+  <p>Browse all 5 themed creative spaces. Filter by your use case and budget.</p>
+  <div class="search-bar">
+    <span style="color:var(--muted);">🔍</span>
+    <input type="text" id="search-input" placeholder="Search by room name, theme, or keyword..." oninput="applyFilters()"/>
+    <span style="color:var(--muted); font-size:0.8rem;" id="result-count-badge">5 rooms</span>
+  </div>
+</div>
+
+<div class="filter-tabs">
+  <div class="ftab active" onclick="setFilter('All', this)">✦ All Spaces</div>
+  <div class="ftab" onclick="setFilter('Shoots', this)">📸 Photo & Video Shoots</div>
+  <div class="ftab" onclick="setFilter('Events', this)">🎉 Events & Parties</div>
+  <div class="ftab" onclick="setFilter('Recording', this)">🎙️ Recording & Podcasts</div>
+</div>
+
+<div class="rooms-layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Price per hour</div>
+      <div class="price-range">
+        <input type="range" id="price-slider" min="600" max="1200" value="1200" step="100" oninput="applyFilters(); updatePriceDisplay()"/>
+        <div class="price-display">
+          <span>₹600</span>
+          <span id="price-val" style="color:var(--gold);">Up to ₹1,200</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Capacity</div>
+      <div class="cap-filter">
+        <label class="cap-opt"><input type="checkbox" value="small" onchange="applyFilters()"/> Up to 8 people</label>
+        <label class="cap-opt"><input type="checkbox" value="medium" onchange="applyFilters()"/> 8–15 people</label>
+        <label class="cap-opt"><input type="checkbox" value="large" onchange="applyFilters()"/> 15+ people</label>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Sort by</div>
+      <select class="input-group select" id="sort-select" onchange="applyFilters()" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; width:100%; cursor:pointer;">
+        <option value="default">Default</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="capacity">Capacity</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="rooms-list">
+    <div class="results-count" id="results-count">Showing 5 spaces</div>
+    <div id="rooms-list-el"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  Canvas.requireAuth();
+  const user = Canvas.getUser();
+  document.getElementById('user-initial').textContent = user.initials || user.name[0].toUpperCase();
+  document.getElementById('user-name-nav').textContent = user.name.split(' ')[0];
+  function toggleMenu() { document.getElementById('user-menu').classList.toggle('open'); }
+  document.addEventListener('click', e => { if (!e.target.closest('.nav-user')) document.getElementById('user-menu').classList.remove('open'); });
+
+  let activeTag = 'All';
+
+  function setFilter(tag, el) {
+    activeTag = tag;
+    document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function updatePriceDisplay() {
+    const v = document.getElementById('price-slider').value;
+    document.getElementById('price-val').textContent = v == 1200 ? 'Up to ₹1,200' : `Up to ₹${v}`;
+  }
+
+  function applyFilters() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const maxPrice = parseInt(document.getElementById('price-slider').value);
+    const capChecks = [...document.querySelectorAll('.cap-filter input:checked')].map(c => c.value);
+    const sort = document.getElementById('sort-select').value;
+
+    let filtered = ROOMS.filter(r => {
+      if (activeTag !== 'All' && !r.tags.includes(activeTag)) return false;
+      if (r.price && r.price > maxPrice) return false;
+      if (search && !r.name.toLowerCase().includes(search) && !r.theme.toLowerCase().includes(search) && !r.desc.toLowerCase().includes(search)) return false;
+      if (capChecks.length) {
+        const inSmall = r.capacity <= 8;
+        const inMed = r.capacity > 8 && r.capacity <= 15;
+        const inLarge = r.capacity > 15;
+        if (capChecks.includes('small') && !inSmall && !capChecks.includes('medium') && !capChecks.includes('large')) return false;
+        const allowed = (capChecks.includes('small') && inSmall) || (capChecks.includes('medium') && inMed) || (capChecks.includes('large') && inLarge);
+        if (!allowed) return false;
+      }
+      return true;
+    });
+
+    if (sort === 'price-asc') filtered.sort((a,b) => (a.price||9999)-(b.price||9999));
+    else if (sort === 'price-desc') filtered.sort((a,b) => (b.price||9999)-(a.price||9999));
+    else if (sort === 'capacity') filtered.sort((a,b) => b.capacity-a.capacity);
+
+    renderList(filtered);
+    document.getElementById('results-count').textContent = `Showing ${filtered.length} space${filtered.length!==1?'s':''}`;
+    document.getElementById('result-count-badge').textContent = `${filtered.length} rooms`;
+  }
+
+  function renderList(rooms) {
+    const el = document.getElementById('rooms-list-el');
+    if (!rooms.length) {
+      el.innerHTML = `<div class="no-results"><div>🔍</div><div>No spaces match your filters</div><div style="font-size:0.85rem;margin-top:8px;">Try adjusting your search or filters</div></div>`;
+      return;
+    }
+    el.innerHTML = rooms.map(r => `
+      <div class="room-row" onclick="window.location.href='room-detail.html?id=${r.id}'">
+        <div class="room-row-thumb" style="background:${r.gradient}">${r.icon}</div>
+        <div class="room-row-body">
+          <div>
+            <div class="room-row-top">
+              <div>
+                <div class="room-row-name">${r.name}</div>
+                <div class="room-row-theme">${r.theme}</div>
+              </div>
+              <div class="badge badge-gold">${r.tags[0]}</div>
+            </div>
+            <div class="room-row-desc">${r.desc}</div>
+            <div class="includes-list">${r.includes.map(i => `<span class="include-chip">✓ ${i}</span>`).join('')}</div>
+          </div>
+          <div class="room-row-bottom">
+            <div>
+              <div class="price-big">${r.price ? Canvas.formatINR(r.price) : 'On Request'} <span>${r.price ? '/ hr' : ''}</span></div>
+              <div class="capacity-info">Up to ${r.capacity} people</div>
+            </div>
+            <button class="book-btn" onclick="event.stopPropagation(); window.location.href='room-detail.html?id=${r.id}'">
+              Book this Space →
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  applyFilters();
+</script>
+</body>
+</html>

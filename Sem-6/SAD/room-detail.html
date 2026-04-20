@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CANVAS – Room Detail</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body { padding-top: 80px; }
+    .user-pill { display:flex; align-items:center; gap:10px; background:var(--bg3); border:1px solid var(--border); border-radius:50px; padding:6px 16px 6px 6px; cursor:pointer; transition:all 0.2s; }
+    .user-pill:hover { border-color:var(--gold); }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; color:#0d0d0d; }
+    .nav-user { position:relative; }
+    .user-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); min-width:200px; overflow:hidden; display:none; z-index:200; box-shadow:0 16px 40px rgba(0,0,0,0.5); }
+    .user-menu.open { display:block; animation:pageFade 0.2s ease; }
+    .user-menu a { display:flex; align-items:center; gap:10px; padding:13px 18px; color:var(--text); font-size:0.88rem; transition:background 0.15s; }
+    .user-menu a:hover { background:rgba(255,255,255,0.04); }
+    .user-menu .separator { height:1px; background:var(--border); }
+
+    /* HERO BANNER */
+    .room-hero {
+      height: 420px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8rem;
+      position: relative; overflow: hidden;
+    }
+    .room-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--bg) 100%);
+    }
+
+    .breadcrumb {
+      padding: 24px 80px 0;
+      font-size: 0.82rem; color: var(--muted);
+      display: flex; gap: 8px; align-items: center;
+    }
+    .breadcrumb a { color: var(--muted); transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb span { color: var(--border); }
+
+    .detail-layout {
+      display: flex; gap: 48px;
+      padding: 40px 80px 80px;
+      align-items: flex-start;
+    }
+
+    /* LEFT CONTENT */
+    .detail-main { flex: 1; min-width: 0; }
+    .room-title { font-size: 2.6rem; margin-bottom: 8px; }
+    .room-meta { display: flex; gap: 20px; align-items: center; color: var(--muted); font-size: 0.88rem; margin-bottom: 28px; flex-wrap: wrap; }
+    .room-meta span { display: flex; align-items: center; gap: 6px; }
+
+    .detail-section { margin-bottom: 40px; }
+    .detail-section h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+    .includes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .include-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px;
+      font-size: 0.87rem;
+    }
+    .include-icon { font-size: 1.2rem; }
+
+    .gallery {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 160px 160px; gap: 8px;
+    }
+    .gallery-item {
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; overflow: hidden;
+    }
+    .gallery-item:first-child { grid-row: span 2; grid-column: span 1; font-size: 4rem; }
+
+    .rules-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .rules-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 0.87rem; color: rgba(240,236,228,0.75);
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .rules-list li:last-child { border: none; }
+    .rule-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* RIGHT STICKY CARD */
+    .booking-card {
+      width: 360px; flex-shrink: 0;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px;
+      position: sticky; top: 100px;
+    }
+    .price-display-big {
+      font-size: 2rem; font-weight: 700; color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .price-display-big span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .capacity-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg3); border-radius: 50px;
+      padding: 5px 14px; font-size: 0.8rem; color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .date-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+      margin-bottom: 20px;
+    }
+    .date-cell {
+      aspect-ratio: 1; border-radius: var(--radius-sm);
+      background: var(--bg3); border: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 0.7rem; transition: all 0.2s;
+      gap: 2px;
+    }
+    .date-cell .day-num { font-size: 0.88rem; font-weight: 600; }
+    .date-cell .day-name { color: var(--muted); font-size: 0.62rem; text-transform: uppercase; }
+    .date-cell.selected { background: var(--gold-dim); border-color: rgba(201,168,76,0.5); }
+    .date-cell.selected .day-num { color: var(--gold); }
+    .date-cell:hover:not(.selected) { border-color: rgba(255,255,255,0.2); }
+
+    .time-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .time-slot {
+      padding: 10px; border-radius: var(--radius-sm);
+      background: var(--bg3); border: 1px solid var(--border);
+      text-align: center; font-size: 0.82rem;
+      cursor: pointer; transition: all 0.2s; color: var(--text);
+    }
+    .time-slot.selected { background: var(--gold-dim); border-color: rgba(201,168,76,0.5); color: var(--gold); font-weight: 600; }
+    .time-slot:hover:not(.selected) { border-color: rgba(255,255,255,0.15); }
+    .time-slot.booked { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+
+    .duration-select {
+      display: flex; gap: 8px; margin-bottom: 24px;
+    }
+    .dur-btn {
+      flex: 1; padding: 9px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); text-align: center;
+      font-size: 0.82rem; cursor: pointer; color: var(--text);
+      transition: all 0.2s;
+    }
+    .dur-btn.selected { background: var(--gold-dim); border-color: rgba(201,168,76,0.5); color: var(--gold); font-weight: 600; }
+
+    .price-breakdown {
+      background: var(--bg3); border-radius: var(--radius-sm);
+      padding: 16px; margin-bottom: 20px;
+    }
+    .pb-row { display: flex; justify-content: space-between; font-size: 0.84rem; padding: 5px 0; color: var(--muted); }
+    .pb-row.total { color: var(--text); font-weight: 700; font-size: 0.95rem; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 5px; }
+    .pb-row.total .val { color: var(--gold); }
+
+    .proceed-btn {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #0d0d0d; border: none; border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 1rem; cursor: pointer; transition: all 0.25s;
+    }
+    .proceed-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(201,168,76,0.35); }
+    .proceed-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .free-cancel { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 12px; }
+
+    @media (max-width: 1100px) {
+      .breadcrumb, .detail-layout { padding-left: 40px; padding-right: 40px; }
+      .booking-card { width: 320px; }
+    }
+    @media (max-width: 900px) {
+      .detail-layout { flex-direction: column; }
+      .booking-card { width: 100%; position: static; }
+      .breadcrumb, .detail-layout { padding-left: 20px; padding-right: 20px; }
+      .room-hero { height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><a href="home.html">CANVAS</a></div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="rooms.html">Spaces</a>
+    <a href="mybookings.html">My Bookings</a>
+    <div class="nav-user">
+      <div class="user-pill" onclick="toggleMenu()">
+        <div class="avatar" id="user-initial">C</div>
+        <span id="user-name-nav">Creator</span>
+        <span style="color:var(--muted);font-size:0.8rem;">▾</span>
+      </div>
+      <div class="user-menu" id="user-menu">
+        <a href="mybookings.html">📋 My Bookings</a>
+        <div class="separator"></div>
+        <a href="#" onclick="Canvas.logout()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="room-hero" class="room-hero"></div>
+
+<div class="breadcrumb">
+  <a href="home.html">Home</a><span>›</span>
+  <a href="rooms.html">Spaces</a><span>›</span>
+  <span id="bc-name" style="color:var(--text);">Room</span>
+</div>
+
+<div class="detail-layout page-fade">
+  <!-- MAIN -->
+  <div class="detail-main">
+    <h1 class="room-title" id="room-title">Room Name</h1>
+    <div class="room-meta" id="room-meta"></div>
+
+    <!-- Gallery -->
+    <div class="detail-section">
+      <h3>Gallery</h3>
+      <div class="gallery" id="room-gallery"></div>
+    </div>
+
+    <!-- Includes -->
+    <div class="detail-section">
+      <h3>What's Included</h3>
+      <div class="includes-grid" id="room-includes"></div>
+    </div>
+
+    <!-- Rules -->
+    <div class="detail-section">
+      <h3>Rules & Guidelines</h3>
+      <ul class="rules-list">
+        <li><span class="rule-icon">⏰</span> Please arrive 10 minutes before your slot. Late arrivals won't receive extra time.</li>
+        <li><span class="rule-icon">🚫</span> No smoking, alcohol, or outside food allowed inside the rooms.</li>
+        <li><span class="rule-icon">🔊</span> Keep noise levels reasonable. Respect neighbouring bookings.</li>
+        <li><span class="rule-icon">📸</span> You're free to shoot freely — no hidden charges for additional equipment use.</li>
+        <li><span class="rule-icon">🧹</span> Leave the space clean and tidy. Damage charges may apply.</li>
+        <li><span class="rule-icon">❌</span> Cancellations made 24+ hours in advance receive a full refund.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BOOKING CARD -->
+  <div class="booking-card">
+    <div class="price-display-big" id="card-price">₹800 <span>/ hr</span></div>
+    <div class="capacity-badge">👥 <span id="card-cap">Up to 8 people</span></div>
+
+    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:10px;">Select Date</div>
+    <div class="date-grid" id="date-grid"></div>
+
+    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:10px;">Available Slots</div>
+    <div class="time-grid" id="time-grid"></div>
+
+    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:10px;">Duration</div>
+    <div class="duration-select" id="dur-select"></div>
+
+    <div class="price-breakdown" id="price-breakdown"></div>
+
+    <button class="proceed-btn" id="proceed-btn" onclick="proceed()" disabled>Select a Date & Slot</button>
+    <div class="free-cancel">🛡️ Free cancellation 24hrs before</div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  Canvas.requireAuth();
+  const user = Canvas.getUser();
+  document.getElementById('user-initial').textContent = user.initials || user.name[0].toUpperCase();
+  document.getElementById('user-name-nav').textContent = user.name.split(' ')[0];
+  function toggleMenu() { document.getElementById('user-menu').classList.toggle('open'); }
+  document.addEventListener('click', e => { if (!e.target.closest('.nav-user')) document.getElementById('user-menu').classList.remove('open'); });
+
+const params = new URLSearchParams(window.location.search);
+const roomId = params.get('id');
+const room = ROOMS.find(r => r.id === roomId);
+
+// If room is missing, send them back to the list
+if (!room) {
+    window.location.href = 'rooms.html';
+}
+
+  // Set hero
+  document.getElementById('room-hero').style.background = room.gradient;
+  document.getElementById('room-hero').innerHTML = `<span style="position:relative;z-index:1;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.5))">${room.icon}</span>`;
+  document.getElementById('bc-name').textContent = room.name;
+  document.title = `CANVAS – ${room.name}`;
+  document.getElementById('room-title').textContent = room.name;
+  document.getElementById('room-meta').innerHTML = `
+    <span>🏷️ ${room.theme}</span>
+    <span>👥 Up to ${room.capacity} people</span>
+    <span>💰 ${room.price ? Canvas.formatINR(room.price)+'/hr' : 'On Request'}</span>
+    <span class="badge badge-green">Available Now</span>
+  `;
+  document.getElementById('card-price').innerHTML = room.price ? `${Canvas.formatINR(room.price)} <span>/ hr</span>` : '<span style="font-size:1.2rem">On Request</span>';
+  document.getElementById('card-cap').textContent = `Up to ${room.capacity} people`;
+
+  // Gallery
+  const galleryColors = ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.2)', 'rgba(0,0,0,0.25)', 'rgba(0,0,0,0.15)', 'rgba(0,0,0,0.35)'];
+  document.getElementById('room-gallery').innerHTML = [room.icon, '📷', '💡', '🎬', '✨'].map((ic, i) => `
+    <div class="gallery-item" style="background:${room.gradient}; opacity:${0.7+i*0.06};">${ic}</div>
+  `).join('');
+
+  // Includes
+  const includeIcons = ['🌟','💡','📡','🎨','🎭','🔊'];
+  document.getElementById('room-includes').innerHTML = room.includes.map((inc, i) => `
+    <div class="include-item"><span class="include-icon">${includeIcons[i] || '✓'}</span>${inc}</div>
+  `).join('');
+
+  // Date grid
+  let selectedDate = null, selectedSlot = null, selectedDur = 1;
+  const today = new Date();
+  const dateGrid = document.getElementById('date-grid');
+  const days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    const cell = document.createElement('div');
+    cell.className = 'date-cell';
+    cell.innerHTML = `<span class="day-num">${d.getDate()}</span><span class="day-name">${days[d.getDay()]}</span>`;
+    const ds = d.toISOString().split('T')[0];
+    cell.onclick = () => selectDate(ds, cell);
+    dateGrid.appendChild(cell);
+  }
+
+  function selectDate(ds, el) {
+    selectedDate = ds; selectedSlot = null;
+    document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    renderSlots();
+    updateCard();
+  }
+
+  const BOOKED = ['9:00 AM', '3:00 PM']; // mock booked slots
+  const SHOW_SLOTS = TIME_SLOTS.slice(0, 12);
+  function renderSlots() {
+  const tg = document.getElementById('time-grid');
+  tg.innerHTML = SHOW_SLOTS.map(s => {
+    const booked = BOOKED.includes(s);
+    // Fixed: Removed extra backticks and simplified logic
+    const clickHandler = booked ? "" : `selectSlot('${s}', this)`;
+    return `<div class="time-slot${booked?' booked':''}" onclick="${clickHandler}">${s}${booked?' ✗':''}</div>`;
+  }).join('');
+}
+  renderSlots();
+
+  function selectSlot(s, el) {
+    if (!selectedDate) { Canvas.toast('Please select a date first', 'error'); return; }
+    selectedSlot = s;
+    document.querySelectorAll('.time-slot:not(.booked)').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    updateCard();
+  }
+
+  // Duration
+  const durSel = document.getElementById('dur-select');
+  [1,2,3,4].forEach(h => {
+    const btn = document.createElement('div');
+    btn.className = `dur-btn${h===1?' selected':''}`;
+    btn.textContent = `${h}h`;
+    btn.onclick = () => {
+      selectedDur = h;
+      document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      updateCard();
+    };
+    durSel.appendChild(btn);
+  });
+
+  function updateCard() {
+    const pb = document.getElementById('price-breakdown');
+    const procBtn = document.getElementById('proceed-btn');
+    if (!room.price) {
+      pb.innerHTML = '<div class="pb-row">Price on request. Call us for custom quotes.</div>';
+      procBtn.textContent = 'Request a Quote';
+      procBtn.disabled = !selectedDate;
+      return;
+    }
+    const base = room.price * selectedDur;
+    const fee = 100;
+    const gst = Math.round((base + fee) * 0.18);
+    const total = base + fee + gst;
+    pb.innerHTML = `
+      <div class="pb-row"><span>${Canvas.formatINR(room.price)} × ${selectedDur}h</span><span>${Canvas.formatINR(base)}</span></div>
+      <div class="pb-row"><span>Booking fee</span><span>${Canvas.formatINR(fee)}</span></div>
+      <div class="pb-row"><span>GST (18%)</span><span>${Canvas.formatINR(gst)}</span></div>
+      <div class="pb-row total"><span>Total</span><span class="val">${Canvas.formatINR(total)}</span></div>
+    `;
+    if (selectedDate && selectedSlot) {
+      procBtn.disabled = false;
+      procBtn.textContent = `Pay ${Canvas.formatINR(total)} →`;
+    } else {
+      procBtn.disabled = true;
+      procBtn.textContent = selectedDate ? 'Select a Time Slot' : 'Select a Date & Slot';
+    }
+  }
+  updateCard();
+
+  function proceed() {
+  if (!selectedDate || (!selectedSlot && room.price)) return;
+  
+  // Handle rooms with no fixed price (Convertible Room)
+  const isQuoteOnly = !room.price;
+  const base = isQuoteOnly ? 0 : (room.price * selectedDur);
+  const fee = isQuoteOnly ? 0 : 100;
+  const gst = isQuoteOnly ? 0 : Math.round((base + fee) * 0.18);
+  const total = base + fee + gst;
+
+  Canvas.saveDraft({ 
+    room: room.id, 
+    roomName: room.name, 
+    date: selectedDate, 
+    slot: selectedSlot || "Request for Quote", 
+    duration: selectedDur, 
+    basePrice: base, 
+    fee: fee, 
+    gst: gst, 
+    total: total, 
+    gradient: room.gradient, 
+    icon: room.icon 
+  });
+  
+  window.location.href = 'booking.html';
+}
+</script>
+</body>
+</html>

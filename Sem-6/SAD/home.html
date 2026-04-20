@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CANVAS – Home</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body { padding-top: 80px; }
+
+    /* NAV USER */
+    .user-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 50px; padding: 6px 16px 6px 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .user-pill:hover { border-color: var(--gold); }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; color: #0d0d0d;
+    }
+    .user-menu {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); min-width: 200px;
+      overflow: hidden; display: none; z-index: 200;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .user-menu.open { display: block; animation: pageFade 0.2s ease; }
+    .user-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px; color: var(--text);
+      font-size: 0.88rem; transition: background 0.15s;
+    }
+    .user-menu a:hover { background: rgba(255,255,255,0.04); }
+    .user-menu .separator { height: 1px; background: var(--border); }
+    .nav-user { position: relative; }
+
+    /* HERO */
+    .hero {
+      min-height: 92vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 0 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    }
+    .hero-grid {
+      position: absolute; right: 0; top: 80px; bottom: 0;
+      width: 48%;
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr;
+      gap: 3px; opacity: 0.55;
+      clip-path: polygon(5% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+    .hero-grid-cell {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.8rem;
+      animation: fadeCell 0.8s ease forwards; opacity: 0;
+    }
+    .hero-grid-cell:nth-child(1) { background: linear-gradient(135deg,#3d2010,#8B5E3C); animation-delay:0.1s; }
+    .hero-grid-cell:nth-child(2) { background: linear-gradient(135deg,#1a0533,#7B2FBE); animation-delay:0.2s; }
+    .hero-grid-cell:nth-child(3) { background: linear-gradient(135deg,#0a1f33,#1a5276); animation-delay:0.3s; }
+    .hero-grid-cell:nth-child(4) { background: linear-gradient(135deg,#0d2318,#2d6a4f); animation-delay:0.4s; }
+    .hero-grid-cell:nth-child(5) { background: linear-gradient(135deg,#1a1208,#c9a84c); grid-column: span 2; animation-delay:0.5s; }
+    @keyframes fadeCell { from{opacity:0;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--gold); font-size: 0.8rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 20px; font-weight: 600;
+    }
+    .hero-eyebrow::before { content:''; width:32px; height:1px; background:var(--gold); }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 1.08; max-width: 600px;
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 1.1rem; color: rgba(240,236,228,0.65);
+      max-width: 460px; line-height: 1.7; margin-bottom: 40px;
+    }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 64px;
+      position: relative; z-index: 2;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--gold); }
+    .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* SECTION */
+    section { padding: 100px 80px; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 600; margin-bottom: 14px;
+    }
+    .section-title { font-size: clamp(2rem, 3.5vw, 3rem); margin-bottom: 16px; }
+    .section-sub { color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 56px; }
+
+    /* ROOMS GRID */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .room-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .room-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .room-card:nth-child(4) { grid-column: span 1; }
+    .room-card:nth-child(5) { grid-column: span 2; }
+    .room-thumb {
+      height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .room-thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6));
+    }
+    .room-body { padding: 20px 22px; }
+    .room-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+    .room-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-bottom: 16px; }
+    .room-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: 14px;
+    }
+    .room-price { color: var(--gold); font-weight: 700; }
+    .room-price span { font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+    .room-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .room-tag {
+      padding: 3px 10px; background: rgba(255,255,255,0.05);
+      border-radius: 50px; font-size: 0.72rem; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .book-mini {
+      padding: 8px 18px; border-radius: 50px;
+      background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .book-mini:hover { background: var(--gold); color: #0d0d0d; }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px;
+    }
+    .filter-pill {
+      padding: 8px 20px; border-radius: 50px;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.85rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-pill.active, .filter-pill:hover {
+      background: var(--gold-dim); border-color: rgba(201,168,76,0.4);
+      color: var(--gold);
+    }
+
+    /* HOW IT WORKS */
+    .steps-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+      margin-top: 48px;
+    }
+    .hiw-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 24px;
+    }
+    .hiw-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem; font-weight: 900;
+      color: var(--border); line-height: 1;
+      margin-bottom: 16px;
+    }
+    .hiw-icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .hiw-title { font-weight: 600; margin-bottom: 8px; }
+    .hiw-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+    /* TESTIMONIALS */
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+    }
+    .testi-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 14px; }
+    .testi-text { font-size: 0.9rem; line-height: 1.65; color: rgba(240,236,228,0.8); margin-bottom: 20px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #a06020);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; color: #0d0d0d;
+    }
+    .testi-name { font-weight: 600; font-size: 0.88rem; }
+    .testi-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* CTA SECTION */
+    .cta-section {
+      margin: 0 80px 100px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 24px; padding: 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 40px;
+    }
+    .cta-text h2 { font-size: 2.5rem; margin-bottom: 12px; }
+    .cta-text p { color: var(--muted); max-width: 400px; line-height: 1.6; }
+
+    footer {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 60px 80px 40px;
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { color: var(--muted); font-size: 0.85rem; line-height: 1.65; margin-top: 12px; max-width: 260px; }
+    .footer-col h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 16px; }
+    .footer-col a { display: block; color: rgba(240,236,228,0.6); font-size: 0.87rem; margin-bottom: 10px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8rem; }
+
+    @media (max-width: 1100px) {
+      .hero { padding: 0 40px; }
+      section { padding: 80px 40px; }
+      .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+      .room-card:nth-child(5) { grid-column: span 1; }
+      .steps-row { grid-template-columns: repeat(2, 1fr); }
+      .testi-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .cta-section { margin: 0 40px 80px; padding: 60px 40px; flex-direction: column; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .hero { padding: 0 24px; }
+      .hero-grid { display: none; }
+      section { padding: 60px 24px; }
+      .rooms-grid { grid-template-columns: 1fr; }
+      .steps-row { grid-template-columns: 1fr; }
+      .cta-section { margin: 0 24px 60px; padding: 40px 24px; }
+      footer { padding: 40px 24px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CANVAS</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="rooms.html">Spaces</a>
+    <a href="#how">How It Works</a>
+    <a href="mybookings.html">My Bookings</a>
+    <div class="nav-user">
+      <div class="user-pill" onclick="toggleMenu()">
+        <div class="avatar" id="user-initial">C</div>
+        <span id="user-name-nav" style="font-size:0.88rem; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Creator</span>
+        <span style="color:var(--muted); font-size:0.8rem;">▾</span>
+      </div>
+      <div class="user-menu" id="user-menu">
+        <a href="mybookings.html">📋 My Bookings</a>
+        <a href="#">👤 Profile</a>
+        <div class="separator"></div>
+        <a href="#" onclick="Canvas.logout()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid">
+    <div class="hero-grid-cell">🏺</div>
+    <div class="hero-grid-cell">🪩</div>
+    <div class="hero-grid-cell">🎙️</div>
+    <div class="hero-grid-cell">🎭</div>
+    <div class="hero-grid-cell">✨</div>
+  </div>
+  <div style="position:relative; z-index:2;">
+    <div class="hero-eyebrow">Ahmedabad, Gujarat</div>
+    <h1 class="page-fade">Where Creativity <br/><em class="shimmer-text">finds its space</em></h1>
+    <p class="page-fade" style="animation-delay:0.1s;">5 themed rooms bookable by the hour for creators, performers & dreamers. No corporate pricing. No generic venues.</p>
+    <div class="hero-cta page-fade" style="animation-delay:0.2s;">
+      <a href="rooms.html" class="btn btn-gold">Explore Spaces →</a>
+      <a href="#how" class="btn btn-outline">How It Works</a>
+    </div>
+    <div class="hero-stats page-fade" style="animation-delay:0.3s;">
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">Themed Rooms</span></div>
+      <div class="stat-item"><span class="stat-num">₹600</span><span class="stat-label">Starting / hr</span></div>
+      <div class="stat-item"><span class="stat-num">6am</span><span class="stat-label">Opens Daily</span></div>
+      <div class="stat-item"><span class="stat-num">11pm</span><span class="stat-label">Last Booking</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section id="rooms">
+  <div class="section-label">Our Creative Spaces</div>
+  <h2 class="section-title">5 Rooms. Endless Possibilities.</h2>
+  <p class="section-sub">Each room is designed with a specific creative use case in mind — so you get the perfect backdrop, every time.</p>
+
+  <div class="filter-bar">
+    <div class="filter-pill active" onclick="filterRooms('All', this)">All Spaces</div>
+    <div class="filter-pill" onclick="filterRooms('Shoots', this)">📸 Shoots</div>
+    <div class="filter-pill" onclick="filterRooms('Events', this)">🎉 Events</div>
+    <div class="filter-pill" onclick="filterRooms('Recording', this)">🎙️ Recording</div>
+  </div>
+
+  <div class="rooms-grid" id="rooms-grid"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background: var(--bg2);">
+  <div class="section-label">Process</div>
+  <h2 class="section-title">Book in under 2 minutes</h2>
+  <p class="section-sub">Our streamlined booking flow takes you from discovery to a confirmed booking in 5 simple steps.</p>
+  <div class="steps-row">
+    <div class="hiw-card">
+      <div class="hiw-num">01</div>
+      <div class="hiw-icon">🔍</div>
+      <div class="hiw-title">Browse & Filter</div>
+      <div class="hiw-desc">Explore all 5 themed rooms. Filter by your use case — Shoots, Events, or Recording.</div>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">02</div>
+      <div class="hiw-icon">📅</div>
+      <div class="hiw-title">Pick Date & Slot</div>
+      <div class="hiw-desc">Choose your preferred date, time slot, and duration. Available slots shown in real time.</div>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">03</div>
+      <div class="hiw-icon">💳</div>
+      <div class="hiw-title">Pay Securely</div>
+      <div class="hiw-desc">Pay via UPI, card, or net banking through Razorpay. Total includes GST and booking fee.</div>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">04</div>
+      <div class="hiw-icon">✅</div>
+      <div class="hiw-title">Get Confirmed</div>
+      <div class="hiw-desc">Receive your booking confirmation with a unique reference number via email & SMS.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-label">What Creators Say</div>
+  <h2 class="section-title">Loved by Ahmedabad's Creators</h2>
+  <p class="section-sub">From content creators to event planners — Canvas has become Ahmedabad's go-to creative hub.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The Disco/Neon room is absolutely stunning. Shot 3 reels in 2 hours and every single one was fire. Totally worth it."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div><div class="testi-name">Priya Sharma</div><div class="testi-role">Content Creator, 180K followers</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Recorded my first podcast in the studio here. The soundproofing is incredible and the setup looks so professional."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#1a5276,#5dade2);">R</div>
+        <div><div class="testi-name">Rahul Mehta</div><div class="testi-role">Podcast Host – TechTalksGJ</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <p class="testi-text">"Used the Traditional Room for a pre-wedding shoot. The jharokha and warm lighting made every shot look cinematic."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,#8B5E3C,#c9a84c);">K</div>
+        <div><div class="testi-name">Kavya Patel</div><div class="testi-role">Photographer & Videographer</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-text">
+    <h2>Ready to create something<br/><em class="shimmer-text">extraordinary?</em></h2>
+    <p>Join hundreds of creators who've found their perfect space at Canvas. Book your slot in under 2 minutes.</p>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:14px; flex-shrink:0;">
+    <a href="rooms.html" class="btn btn-gold" style="font-size:1rem; padding:18px 40px;">Book a Space Now →</a>
+    <div style="text-align:center; color:var(--muted); font-size:0.8rem;">Free cancellation 24hrs before</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">CANVAS</div>
+      <p>Ahmedabad's premier creative space rental platform. 5 themed rooms for creators, performers, and dreamers.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Spaces</h4>
+      <a href="rooms.html">Traditional Room</a>
+      <a href="rooms.html">Disco / Neon Room</a>
+      <a href="rooms.html">Podcast Studio</a>
+      <a href="rooms.html">Workshop Space</a>
+      <a href="rooms.html">Convertible Room</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Canvas</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Cancellation Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Canvas Ahmedabad. All rights reserved.</span>
+    <span>📍 SG Highway, Ahmedabad, Gujarat 380054</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+  Canvas.requireAuth();
+  const user = Canvas.getUser();
+  document.getElementById('user-initial').textContent = user.initials || user.name[0].toUpperCase();
+  document.getElementById('user-name-nav').textContent = user.name.split(' ')[0];
+
+  function toggleMenu() {
+    document.getElementById('user-menu').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-user')) document.getElementById('user-menu').classList.remove('open');
+  });
+
+  let activeFilter = 'All';
+  function renderRooms(filter) {
+    const grid = document.getElementById('rooms-grid');
+    const filtered = filter === 'All' ? ROOMS : ROOMS.filter(r => r.tags.includes(filter));
+    grid.innerHTML = filtered.map(r => `
+      <div class="room-card" onclick="window.location.href='room-detail.html?id=${r.id}'">
+        <div class="room-thumb" style="background:${r.gradient}">
+          <span style="position:relative;z-index:1;">${r.icon}</span>
+        </div>
+        <div class="room-body">
+          <div class="room-tags">${r.tags.map(t => `<span class="room-tag">${t}</span>`).join('')}</div>
+          <div class="room-name">${r.name}</div>
+          <div class="room-desc">${r.desc}</div>
+          <div class="room-footer">
+            <div class="room-price">${r.price ? Canvas.formatINR(r.price) : 'On Request'} <span>${r.price ? '/ hr' : ''}</span></div>
+            <button class="book-mini" onclick="event.stopPropagation(); window.location.href='room-detail.html?id=${r.id}'">Book →</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterRooms(tag, el) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    activeFilter = tag;
+    renderRooms(tag);
+  }
+
+  renderRooms('All');
+</script>
+</body>
+</html>

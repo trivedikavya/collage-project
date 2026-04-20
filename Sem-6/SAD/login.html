@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CANVAS – Login</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body { display: flex; min-height: 100vh; }
+
+    .auth-visual {
+      flex: 1; position: relative; overflow: hidden;
+      background: var(--bg2);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 60px;
+    }
+    .auth-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #0a0500 0%, #1a0f00 40%, #2a1a05 70%, #0d0d0d 100%);
+    }
+    .visual-rooms {
+      position: absolute; inset: 0;
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr;
+      gap: 2px; opacity: 0.35;
+    }
+    .visual-rooms span {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      animation: floatIn 1.2s ease forwards;
+      opacity: 0;
+    }
+    .visual-rooms span:nth-child(1) { animation-delay: 0.1s; background: linear-gradient(135deg,#3d2010,#8B5E3C); }
+    .visual-rooms span:nth-child(2) { animation-delay: 0.2s; background: linear-gradient(135deg,#1a0533,#7B2FBE); }
+    .visual-rooms span:nth-child(3) { animation-delay: 0.3s; background: linear-gradient(135deg,#0a1f33,#1a5276); }
+    .visual-rooms span:nth-child(4) { animation-delay: 0.4s; background: linear-gradient(135deg,#0d2318,#2d6a4f); }
+    .visual-rooms span:nth-child(5) { animation-delay: 0.5s; background: linear-gradient(135deg,#1a1208,#c9a84c); grid-column: span 2; }
+    @keyframes floatIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .visual-content { position: relative; z-index: 2; }
+    .visual-content h1 {
+      font-size: 3.2rem; line-height: 1.1;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .visual-content p { color: rgba(240,236,228,0.6); font-size: 1rem; line-height: 1.6; max-width: 340px; }
+    .visual-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .v-badge {
+      padding: 6px 14px; border-radius: 50px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 0.8rem; color: rgba(240,236,228,0.7);
+    }
+
+    .auth-panel {
+      width: 460px; min-height: 100vh;
+      background: var(--bg);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 60px 48px;
+      border-left: 1px solid var(--border);
+    }
+    .auth-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 900;
+      color: var(--gold); letter-spacing: 0.12em;
+      margin-bottom: 40px;
+    }
+    .auth-title { font-size: 1.8rem; margin-bottom: 6px; }
+    .auth-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 36px; }
+
+    .tab-bar {
+      display: flex; background: var(--bg3);
+      border-radius: var(--radius-sm); padding: 4px;
+      margin-bottom: 32px;
+    }
+    .tab-btn {
+      flex: 1; padding: 10px;
+      border: none; background: transparent;
+      color: var(--muted); font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 500; cursor: pointer;
+      border-radius: 6px; transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; animation: pageFade 0.3s ease; }
+
+    .social-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 0; }
+    .social-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 18px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .social-btn:hover { border-color: var(--gold); background: var(--gold-dim); }
+    .social-btn img { width: 20px; height: 20px; }
+
+    .submit-btn {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #0d0d0d;
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      margin-top: 8px;
+    }
+    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(201,168,76,0.3); }
+
+    .auth-footer { margin-top: 28px; text-align: center; color: var(--muted); font-size: 0.82rem; }
+    .auth-footer a { color: var(--gold); }
+
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 44px; }
+    .pass-toggle {
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--muted); cursor: pointer; font-size: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .auth-visual { display: none; }
+      .auth-panel { width: 100%; padding: 40px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Visual Side -->
+<div class="auth-visual">
+  <div class="visual-rooms">
+    <span>🏺</span><span>🪩</span>
+    <span>🎙️</span><span>🎭</span>
+    <span>✨</span>
+  </div>
+  <div class="visual-content">
+    <h1>Where Creativity<br/><em>finds its space</em></h1>
+    <p>5 themed rooms bookable by the hour for creators, performers & dreamers in Ahmedabad.</p>
+    <div class="visual-badges">
+      <span class="v-badge">📸 Photo Shoots</span>
+      <span class="v-badge">🎬 Video Production</span>
+      <span class="v-badge">🎙️ Podcasting</span>
+      <span class="v-badge">💃 Dance Studios</span>
+      <span class="v-badge">🎉 Events</span>
+    </div>
+  </div>
+</div>
+
+<!-- Auth Panel -->
+<div class="auth-panel page-fade">
+  <div class="auth-logo">CANVAS</div>
+  <h2 class="auth-title">Welcome back</h2>
+  <p class="auth-sub">Sign in to book your creative space</p>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+    <button class="tab-btn" onclick="switchTab('register')">Register</button>
+  </div>
+
+  <!-- Login Form -->
+  <div class="form-panel active" id="login-form">
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="login-email" placeholder="you@example.com"/>
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="login-pass" placeholder="Enter your password"/>
+        <button class="pass-toggle" onclick="togglePass('login-pass', this)">👁️</button>
+      </div>
+    </div>
+    <div style="text-align:right; margin-top:-8px; margin-bottom:20px;">
+      <a href="#" style="color:var(--gold); font-size:0.82rem;">Forgot password?</a>
+    </div>
+    <button class="submit-btn" onclick="handleLogin()">Sign In →</button>
+
+    <div class="divider">or continue with</div>
+    <div class="social-btns">
+      <button class="social-btn" onclick="socialLogin('Google')">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.26 9.77A7.003 7.003 0 0 1 12 5c1.76 0 3.35.65 4.57 1.7l3.4-3.4A11.97 11.97 0 0 0 12 1C7.52 1 3.66 3.8 1.9 7.73l3.36 2.04z"/><path fill="#34A853" d="M16.04 18.01A7.003 7.003 0 0 1 12 19c-3.52 0-6.49-2.3-7.6-5.5l-3.38 2.06A11.97 11.97 0 0 0 12 23c3.11 0 5.92-1.13 8.07-2.98l-4.03-2.01z"/><path fill="#FBBC05" d="M4.4 13.5A7.06 7.06 0 0 1 4 12c0-.53.07-1.04.18-1.54L.82 8.42A11.97 11.97 0 0 0 0 12c0 1.96.47 3.8 1.3 5.44L4.4 13.5z"/><path fill="#4285F4" d="M23 12c0-.65-.06-1.28-.16-1.9H12v3.6h6.15a5.26 5.26 0 0 1-2.28 3.45l4.03 2.01C21.96 17.29 23 14.82 23 12z"/></svg>
+        Continue with Google
+      </button>
+      <button class="social-btn" onclick="socialLogin('Phone')">
+        📱 Continue with Phone (OTP)
+      </button>
+    </div>
+  </div>
+
+  <!-- Register Form -->
+  <div class="form-panel" id="register-form">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 16px;">
+      <div class="input-group">
+        <label>First Name</label>
+        <input type="text" id="reg-fname" placeholder="Kavya"/>
+      </div>
+      <div class="input-group">
+        <label>Last Name</label>
+        <input type="text" id="reg-lname" placeholder="Trivedi"/>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="reg-email" placeholder="you@example.com"/>
+    </div>
+    <div class="input-group">
+      <label>Phone Number</label>
+      <input type="tel" id="reg-phone" placeholder="+91 98765 43210"/>
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="reg-pass" placeholder="Min 8 characters"/>
+        <button class="pass-toggle" onclick="togglePass('reg-pass', this)">👁️</button>
+      </div>
+    </div>
+    <button class="submit-btn" onclick="handleRegister()">Create Account →</button>
+    <p class="auth-footer">By registering you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a></p>
+  </div>
+
+  <p class="auth-footer" style="margin-top:24px;">
+    <span id="footer-hint">New to Canvas? <a href="#" onclick="switchTab('register'); return false;">Create account</a></span>
+  </p>
+</div>
+
+<script src="app.js"></script>
+<script>
+  // Redirect if already logged in
+  if (Canvas.isLoggedIn()) window.location.href = 'home.html';
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='login'?i===0:i===1)));
+    document.getElementById('login-form').classList.toggle('active', tab==='login');
+    document.getElementById('register-form').classList.toggle('active', tab==='register');
+    document.getElementById('footer-hint').innerHTML = tab==='login'
+      ? 'New to Canvas? <a href="#" onclick="switchTab(\'register\'); return false;">Create account</a>'
+      : 'Already have an account? <a href="#" onclick="switchTab(\'login\'); return false;">Sign in</a>';
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    if (!email || !pass) { Canvas.toast('Please fill in all fields', 'error'); return; }
+    if (!email.includes('@')) { Canvas.toast('Enter a valid email', 'error'); return; }
+    // Demo: accept any credentials
+    Canvas.login({ name: email.split('@')[0], email, phone: '+91 98765 43210', initials: email[0].toUpperCase() });
+    Canvas.toast('Welcome back! 🎉', 'success');
+    setTimeout(() => window.location.href = 'home.html', 900);
+  }
+
+  function handleRegister() {
+    const fname = document.getElementById('reg-fname').value.trim();
+    const lname = document.getElementById('reg-lname').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    if (!fname || !email || !pass) { Canvas.toast('Please fill in all required fields', 'error'); return; }
+    if (pass.length < 6) { Canvas.toast('Password must be at least 6 characters', 'error'); return; }
+    Canvas.login({ name: `${fname} ${lname}`.trim(), email, phone, initials: fname[0].toUpperCase() });
+    Canvas.toast('Account created! Welcome to Canvas 🎨', 'success');
+    setTimeout(() => window.location.href = 'home.html', 900);
+  }
+
+  function socialLogin(provider) {
+    Canvas.login({ name: 'Creator', email: 'creator@canvas.in', phone: '+91 98765 43210', initials: 'C' });
+    Canvas.toast(`Signed in with ${provider} ✓`, 'success');
+    setTimeout(() => window.location.href = 'home.html', 900);
+  }
+
+  function togglePass(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+  }
+
+  // Enter key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('login-form').classList.contains('active')) handleLogin();
+      else handleRegister();
+    }
+  });
+</script>
+</body>
+</html>

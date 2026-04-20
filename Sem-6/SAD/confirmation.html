@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CANVAS – Booking Confirmed!</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body { padding-top: 80px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    .user-pill { display:flex; align-items:center; gap:10px; background:var(--bg3); border:1px solid var(--border); border-radius:50px; padding:6px 16px 6px 6px; cursor:pointer; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem; color:#0d0d0d; }
+    .nav-user { position:relative; }
+    .user-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); min-width:200px; overflow:hidden; display:none; z-index:200; box-shadow:0 16px 40px rgba(0,0,0,0.5); }
+    .user-menu.open { display:block; animation:pageFade 0.2s ease; }
+    .user-menu a { display:flex; align-items:center; gap:10px; padding:13px 18px; color:var(--text); font-size:0.88rem; }
+    .user-menu a:hover { background:rgba(255,255,255,0.04); }
+    .user-menu .separator { height:1px; background:var(--border); }
+
+    .confetti-canvas {
+      position: fixed; inset: 0; pointer-events: none; z-index: 200;
+    }
+
+    .confirm-wrap {
+      max-width: 680px; width: 100%;
+      padding: 60px 40px 80px;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(76,175,130,0.12);
+      border: 2px solid rgba(76,175,130,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; margin: 0 auto 28px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes popIn {
+      0% { opacity:0; transform: scale(0.3); }
+      80% { transform: scale(1.08); }
+      100% { opacity:1; transform: scale(1); }
+    }
+
+    .confirm-title { font-size: 2.5rem; margin-bottom: 10px; }
+    .confirm-sub { color: var(--muted); margin-bottom: 40px; }
+
+    .ticket {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      text-align: left; margin-bottom: 32px;
+      position: relative;
+    }
+
+    .ticket-header {
+      padding: 28px 28px 24px;
+      display: flex; align-items: center; gap: 20px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .ticket-room-icon {
+      width: 64px; height: 64px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; flex-shrink: 0;
+    }
+    .ticket-room-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .ticket-location { color: var(--muted); font-size: 0.85rem; }
+
+    .ticket-ref {
+      position: absolute; top: 20px; right: 24px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .ticket-ref .label { color: var(--muted); font-size: 0.7rem; margin-bottom: 2px; }
+    .ticket-ref .code {
+      background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 6px; padding: 4px 10px;
+      color: var(--gold); font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    .ticket-body {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .ticket-field {
+      padding: 20px 28px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .ticket-field:nth-child(even) { border-right: none; }
+    .ticket-field:nth-last-child(-n+2) { border-bottom: none; }
+    .tf-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+    .tf-val { font-size: 1rem; font-weight: 600; }
+
+    .ticket-footer {
+      background: var(--bg3); padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.82rem; color: var(--muted);
+    }
+
+    /* Dotted cutline */
+    .ticket::before, .ticket::after {
+      content: ''; position: absolute;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--bg);
+    }
+    .ticket::before { bottom: 54px; left: -12px; border: 1px solid var(--border); }
+    .ticket::after { bottom: 54px; right: -12px; border: 1px solid var(--border); }
+
+    .confirm-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .info-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin-bottom: 32px; text-align: left;
+    }
+    .info-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 18px;
+      display: flex; gap: 14px;
+    }
+    .info-card-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .info-card-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+    .info-card-text { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    @media (max-width: 600px) {
+      .confirm-wrap { padding: 40px 20px 60px; }
+      .ticket-body { grid-template-columns: 1fr; }
+      .ticket-field { border-right: none; }
+      .ticket-field:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .ticket-field:last-child { border-bottom: none; }
+      .info-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas class="confetti-canvas" id="confetti"></canvas>
+
+<nav>
+  <div class="nav-logo"><a href="home.html">CANVAS</a></div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="rooms.html">Spaces</a>
+    <a href="mybookings.html">My Bookings</a>
+    <div class="nav-user">
+      <div class="user-pill" onclick="toggleMenu()">
+        <div class="avatar" id="user-initial">C</div>
+        <span id="user-name-nav">Creator</span>
+        <span style="color:var(--muted);font-size:0.8rem;">▾</span>
+      </div>
+      <div class="user-menu" id="user-menu">
+        <a href="mybookings.html">📋 My Bookings</a>
+        <div class="separator"></div>
+        <a href="#" onclick="Canvas.logout()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="confirm-wrap page-fade">
+  <div class="success-icon">✓</div>
+  <h1 class="confirm-title">Booking Confirmed!</h1>
+  <p class="confirm-sub">Confirmation sent to your email. See you there! 🎉</p>
+
+  <div class="ticket" id="ticket">
+    <div class="ticket-header">
+      <div class="ticket-room-icon" id="tick-icon"></div>
+      <div>
+        <div class="ticket-room-name" id="tick-name">Room Name</div>
+        <div class="ticket-location">Canvas · SG Highway, Ahmedabad, Gujarat</div>
+      </div>
+    </div>
+    <div class="ticket-ref">
+      <div class="label">Booking Ref</div>
+      <div class="code" id="tick-ref">CVS-XXXXXXXX</div>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-field"><div class="tf-label">Date</div><div class="tf-val" id="tick-date">–</div></div>
+      <div class="ticket-field"><div class="tf-label">Time</div><div class="tf-val" id="tick-time">–</div></div>
+      <div class="ticket-field"><div class="tf-label">Duration</div><div class="tf-val" id="tick-dur">–</div></div>
+      <div class="ticket-field"><div class="tf-label">Amount Paid</div><div class="tf-val" style="color:var(--gold)" id="tick-amt">–</div></div>
+    </div>
+    <div class="ticket-footer">
+      <span id="tick-guest">Guest Name</span>
+      <span style="display:flex; gap:6px; align-items:center;"><span class="badge badge-green">Confirmed</span></span>
+    </div>
+  </div>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-icon">⏰</div>
+      <div>
+        <div class="info-card-title">Arrive Early</div>
+        <div class="info-card-text">Please arrive 10 minutes before your booked slot to get settled in.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🚗</div>
+      <div>
+        <div class="info-card-title">Parking</div>
+        <div class="info-card-text">Free parking available in the SG Highway complex basement.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📞</div>
+      <div>
+        <div class="info-card-title">Need Help?</div>
+        <div class="info-card-text">Call us at +91 98765 43210 or WhatsApp for any assistance.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">❌</div>
+      <div>
+        <div class="info-card-title">Cancellation</div>
+        <div class="info-card-text">Free cancellation up to 24 hours before your booking starts.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirm-actions">
+    <a href="mybookings.html" class="btn btn-gold">View All Bookings</a>
+    <a href="rooms.html" class="btn btn-outline">Book Another Space</a>
+    <a href="home.html" class="btn btn-ghost">Back to Home</a>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  Canvas.requireAuth();
+  const user = Canvas.getUser();
+  document.getElementById('user-initial').textContent = user.initials || user.name[0].toUpperCase();
+  document.getElementById('user-name-nav').textContent = user.name.split(' ')[0];
+  function toggleMenu() { document.getElementById('user-menu').classList.toggle('open'); }
+  document.addEventListener('click', e => { if (!e.target.closest('.nav-user')) document.getElementById('user-menu').classList.remove('open'); });
+
+  const booking = (() => { try { return JSON.parse(localStorage.getItem('canvas_last_booking')); } catch { return null; } })();
+  if (!booking) { window.location.href = 'home.html'; }
+  else {
+    document.getElementById('tick-icon').style.background = booking.gradient;
+    document.getElementById('tick-icon').textContent = booking.icon;
+    document.getElementById('tick-name').textContent = booking.roomName;
+    document.getElementById('tick-ref').textContent = booking.ref;
+    document.getElementById('tick-date').textContent = Canvas.formatDate(booking.date);
+    document.getElementById('tick-time').textContent = `${booking.slot} – ${booking.duration}h`;
+    document.getElementById('tick-dur').textContent = `${booking.duration} Hour${booking.duration>1?'s':''}`;
+    document.getElementById('tick-amt').textContent = Canvas.formatINR(booking.total);
+    document.getElementById('tick-guest').textContent = booking.guestName;
+  }
+
+  // Confetti
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = Array.from({length:120}, () => ({
+    x: Math.random()*canvas.width, y: -20,
+    w: Math.random()*10+5, h: Math.random()*6+3,
+    color: ['#c9a84c','#e6c96f','#4caf82','#7B2FBE','#fff','#f0ece4'][Math.floor(Math.random()*6)],
+    r: Math.random()*360, dr: (Math.random()-0.5)*6,
+    dy: Math.random()*3+1.5, dx: (Math.random()-0.5)*2,
+    opacity: 1,
+  }));
+  let animId;
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = 0;
+    pieces.forEach(p => {
+      p.x += p.dx; p.y += p.dy; p.r += p.dr;
+      if (p.y < canvas.height + 20) { alive++; p.opacity = Math.max(0, 1 - p.y/canvas.height); }
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    if (alive > 0) animId = requestAnimationFrame(drawConfetti);
+    else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.display='none'; }
+  }
+  setTimeout(drawConfetti, 200);
+</script>
+</body>
+</html>
