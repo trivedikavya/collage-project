@@ -136,8 +136,4 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the Agrivoltaics Micro-Zone Optimizer.
 
----
 
-## 📄 License & Contact
-
-Distributed under the MIT License. Built as a prototype for modern sustainable AgTech farming and solar energy co-optimization.
