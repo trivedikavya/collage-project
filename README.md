@@ -1,76 +1,136 @@
+# 🌿 Agrivoltaics Micro-Zone Shadow Mapping & Precision Irrigation Engine
 
-[![](https://visitcount.itsvg.in/api?id=trivedikavya&label=views&color=12&icon=8&pretty=false)](https://visitcount.itsvg.in)
-# Current Sem Outputs will be found here .
-## SEM-4(UI/UX & DT):-
-#### Code You will found here (https://github.com/trivedikavya/collage-project/tree/main/Sem%204) For UI just Scroll Down
-<img src="Sem 4/hlm.png" alt="Home page">
-<img src="Sem 4/screencapture-127-0-0-1-3000-v0-gen-i-html-2025-03-24-11_18_03.png" alt="L Home page">
-<img src="Sem 4/screencapture-127-0-0-1-3000-After-login-g-html-2025-03-29-00_26_43.png" alt="L After login page">
-<img src="Sem 4/screencapture-127-0-0-1-3000-After-login-g-html-2025-03-29-00_26_00.png" alt="d Fter login page">
-<img src="Sem 4/WhatsApp Image 2025-04-30 at 9.07.16 PM.jpeg" alt="d Fter login page">
-<img src="Sem 4/WhatsApp Image 2025-04-30 at 9.07.39 PM.jpeg" alt="d Fter login page">
-<img src="Sem 4/WhatsApp Image 2025-04-30 at 9.08.11 PM.jpeg" alt="d Fter login page">
-<img src="Sem 4/WhatsApp Image 2025-04-30 at 9.21.05 PM.jpeg" alt="d Fter login page">
-<img src="Sem 4/WhatsApp Image 2025-04-30 at 9.21.06 PM.jpeg" alt="d Fter login page">
+> **A full-stack enterprise AgTech web application prototype designed to co-optimize photovoltaic (PV) power generation alongside under-canopy crop microclimates and precision differential irrigation.**
 
+---
 
+## 🚀 Key Features & Architectural Highlights
 
+The system addresses the dual-land-use challenge of modern Agrivoltaics by unifying solar physics ray-tracing, evapotranspiration water reduction modeling, and economic trade-off optimization across 4 dedicated control screens:
 
+1. **Screen 1: Field Setup & Array Geometry Config**
+   - Controlled geometric sliders for Ground Clearance Height ($1.5\text{m} - 4.5\text{m}$), Single-Axis Tilt Angle ($-45^\circ$ to $+45^\circ$), and Row Pitch Spacing ($2.0\text{m} - 8.0\text{m}$).
+   - Dynamic real-time 2D SVG isometric cross-sectional preview illustrating tracker poles, PV glass panels, sun ray vectors, and crop canopy height.
+   - Crop profile preset selector (Butterhead Lettuce, Baby Spinach, Vine Tomatoes, June-Bearing Strawberries, Blueberries).
+   - Zod schema validation with instant error messages.
 
+2. **Screen 2: Dynamic 2D Shadow Map Engine**
+   - High-performance 60 FPS HTML5 Canvas ray-tracing simulation rendering parallel PV array strings over ground soil beds.
+   - Real-time trigonometric shadow displacement calculation based on `SunCalc` solar elevation ($\theta$) and azimuth ($\phi$).
+   - Visual ground color coding: Shaded micro-zones (`rgba(30, 58, 138, 0.45)`) vs. Direct Sunlight (`rgba(245, 158, 11, 0.25)`).
+   - Interactive 24-hour time scrubber with play/pause loop (15-min ticks) and jump presets (Dawn, Zenith, Dusk).
+   - Accumulated Daily Light Integral (DLI) estimation in $\text{mol/m}^2/\text{day}$.
 
+3. **Screen 3: Micro-Zone Precision Irrigation Controller**
+   - Differential watering calculation incorporating evapotranspiration suppression:
+     $$\text{Evapotranspiration Reduction Factor} = 0.40 \times \text{Shade Ratio}$$
+     $$\text{Water Volume (L)} = \text{Base Volume} \times (1 - 0.40 \times \text{Shade Ratio})$$
+   - Interactive $3 \times 3$ micro-zone grid displaying water savings badges, soil moisture progress bars, and manual valve override toggles.
+   - Automated CSV schedule export generator formatting valve timing, runtime, and volume for field microcontrollers.
 
+4. **Screen 4: Power Output vs. Crop Yield Co-Optimization**
+   - Dual-axis Recharts visualization plotting Solar PV Revenue ($) on Left Y-Axis alongside Under-Canopy Crop PAR ($\mu\text{mol/m}^2/\text{s}$) on Right Y-Axis.
+   - Translucent red reference highlights identifying ambient solar heat stress hours.
+   - Interactive Pareto strategy weight slider ($0 = \text{100\% Crop Priority}$, $100 = \text{100\% PV Priority}$) updating projected net economic gain:
+     $$\text{Net Gain} = (\text{Solar Revenue} \times w) + (\text{Crop Value} \times (1 - w)) - \text{Heat Stress Penalty}$$
+   - MQTT / HTTP API Hardware Angle Override Modal for dispatching manual tracker tilt and STOW commands.
 
+---
 
+## 🧮 Mathematical & Physics Engine
 
+### 1. Trigonometric Shadow Projection (`lib/solarMath.ts`)
+Solar position vectors are calculated via `SunCalc`. The 2D ground shadow displacement length and Cartesian offsets are derived as follows:
 
+$$\text{Solar Elevation Angle} = \alpha$$
+$$\text{Solar Azimuth Angle} = \phi$$
+$$\text{Effective Panel Height} = H_{\text{panel}} + \sin(|\theta_{\text{tilt}}|) \cdot \left(\frac{W_{\text{panel}}}{2}\right)$$
+$$\text{Shadow Length } (L) = \frac{\text{Effective Height}}{\tan(\alpha)} \quad \text{for } \alpha > 0$$
+$$\Delta x = L \cdot \sin(\phi)$$
+$$\Delta y = L \cdot \cos(\phi)$$
 
-## SEM-3 
-### AI:-
+### 2. Evapotranspiration & Microclimate Irrigation (`lib/irrigationEngine.ts`)
+Solar shading under PV panels reduces soil evaporation and crop transpiration rate by up to 40%:
 
-```python
-INPUTS:- 
-Welcome to Loan Eligibility Predictor of Kavya Trivedi!
-Enter Applicant's Monthly Income: 50000
-Enter Loan Amount Requested: 20000
-Enter Credit Score (300-850): 750
-Are you employed? (yes/no): yes
+$$\text{Shade Ratio } (S) = \min\left(1.0, \frac{\text{Shadow Length}}{\text{Row Pitch}}\right)$$
+$$V_{\text{calculated}} = V_{\text{base}} \cdot (1 - 0.40 \cdot S)$$
+$$T_{\text{valve}} = T_{\text{base}} \cdot (1 - 0.40 \cdot S)$$
+$$\text{Water Savings \%} = (0.40 \cdot S) \cdot 100$$
 
-OUTPUTS:-
-Result: Loan Approved
+---
 
-Enter your bank account number: 1234567890
-Enter your email ID: example@email.com
-Congratulations! Your loan is approved.
+## 🛠️ Technology Stack Architecture
 
-Account Number: 1234567890
-Email ID: example@email.com
-You will receive an email from us shortly for verification. Once verified,
-your loan amount will be credited to your bank account at a 10% interest rate.
+- **Frontend Framework**: Next.js 14 (App Router), React 18, TypeScript.
+- **Styling & Theme**: Tailwind CSS (Custom dark charcoal `#0F172A`, emerald accents `#10B981`, amber warnings `#F59E0B`), Lucide-React Icons.
+- **Physics Engine**: `SunCalc` (solar position calculations), HTML5 2D Canvas API (hardware-accelerated ray tracing).
+- **State Management**: `Zustand` with `persist` middleware for automatic `localStorage` synchronization.
+- **Charts & Data Visualization**: `Recharts` (`ResponsiveContainer`, `ComposedChart`, `Bar`, `Line`, `ReferenceArea`).
+- **Validation**: `Zod` schema validation.
 
-Rejection Example:
-INPUTS:- 
-Enter Applicant's Monthly Income: 30000
-Enter Loan Amount Requested: 40000
-Enter Credit Score (300-850): 650
-Are you employed? (yes/no): no
+---
 
-OUTPUTS:-
-Result: Loan Rejected
-Unfortunately, you are not eligible for the loan at this time.
-
+## 📁 Directory Structure
 
 ```
-<p>& API BASE CHAT-BOT  </p>
-<img src="SEM 3/chatbot1st.png"> </img>
-<img src="SEM 3/chatbot2nd.png"> </img>
-<img src="SEM 3/chatbot3rd.png"> </img>
+c:\Users\hp\OneDrive\Desktop\Agri\
+├── app/
+│   ├── globals.css               # Global dark theme tokens & animations
+│   ├── layout.tsx                # App root layout with HTML metadata
+│   └── page.tsx                  # Main AgTech dashboard shell & tab controller
+├── components/
+│   ├── Header.tsx                # Enterprise navigation bar & GPS status
+│   ├── setup/
+│   │   ├── FieldSetupForm.tsx         # Controlled range inputs & Zod validation
+│   │   ├── ArraySchematicPreview.tsx  # Dynamic SVG vector cross-section diagram
+│   │   └── MetricSummaryBar.tsx       # Calculated KPI cards (kWp, DLI, LER)
+│   ├── shadow/
+│   │   ├── ShadowCanvas.tsx           # High-FPS HTML5 Canvas 2D shadow ray-tracer
+│   │   └── TimeScrubber.tsx           # 24-hour solar progression scrubber
+│   ├── irrigation/
+│   │   └── ZoneGrid.tsx               # Micro-zone bed cards with valve manual toggle
+│   └── analytics/
+│       ├── CoOptChart.tsx             # Dual-axis Recharts (Solar Revenue vs Crop PAR)
+│       ├── ParetoSlider.tsx           # Trade-off strategy weight slider & Net Gain
+│       └── OverrideModal.tsx          # Direct MQTT / HTTP tracker angle override modal
+├── hooks/
+│   ├── useFarmConfig.ts          # Zustand store for farm parameters & persistence
+│   └── useCoOptimization.ts      # Pareto trade-off weight calculator
+├── lib/
+│   ├── cropData.ts               # Crop profiles (Lettuce, Tomato, Spinach, Strawberries)
+│   ├── exportSchedule.ts         # CSV exporter for irrigation microcontrollers
+│   ├── irrigationEngine.ts       # Micro-zone evapotranspiration water formula
+│   ├── solarEngine.ts            # 24-hour PAR irradiance & DLI calculations
+│   ├── solarMath.ts              # SunCalc shadow projection utility
+│   └── validations/
+│       └── setupSchema.ts        # Zod validation rules
+├── types/
+│   ├── agrivoltaics.ts           # Domain interfaces for farm config & solar output
+│   └── analytics.ts              # Types for optimization data & irrigation schedule
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── README.md
+```
 
-> [!NOTE]\
-> You Have to Preinstall nodejs , react vs code extension 
+---
 
-### OS:- ALL CMD COMMANDS OUTPUT ARE HERE
-<img  src="SEM 3/osop.png"> </img>
+## ⚡ Quickstart Guide
 
-### CN:- AS HOST & PORT MATCHS WITH THIS WEB-PAGE
-<img  src="SEM 3/cn-kavya-op.png"> </img>
+### 1. Install Dependencies
+```bash
+npm install
+```
 
+### 2. Run Local Development Server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the Agrivoltaics Micro-Zone Optimizer.
+
+---
+
+## 📄 License & Contact
+
+Distributed under the MIT License. Built as a prototype for modern sustainable AgTech farming and solar energy co-optimization.
