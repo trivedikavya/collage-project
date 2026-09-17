@@ -1,10 +1,10 @@
-# 🌿 Agrivoltaics Micro-Zone Shadow Mapping & Precision Irrigation Engine
+#  Agrivoltaics Micro-Zone Shadow Mapping & Precision Irrigation Engine
 
 > **A full-stack enterprise AgTech web application prototype designed to co-optimize photovoltaic (PV) power generation alongside under-canopy crop microclimates and precision differential irrigation.**
 
 ---
 
-## 🚀 Key Features & Architectural Highlights
+##  Key Features & Architectural Highlights
 
 The system addresses the dual-land-use challenge of modern Agrivoltaics by unifying solar physics ray-tracing, evapotranspiration water reduction modeling, and economic trade-off optimization across 4 dedicated control screens:
 
@@ -37,7 +37,7 @@ The system addresses the dual-land-use challenge of modern Agrivoltaics by unify
 
 ---
 
-## 🧮 Mathematical & Physics Engine
+##  Mathematical & Physics Engine
 
 ### 1. Trigonometric Shadow Projection (`lib/solarMath.ts`)
 Solar position vectors are calculated via `SunCalc`. The 2D ground shadow displacement length and Cartesian offsets are derived as follows:
@@ -59,7 +59,7 @@ $$\text{Water Savings \%} = (0.40 \cdot S) \cdot 100$$
 
 ---
 
-## 🛠️ Technology Stack Architecture
+##  Technology Stack Architecture
 
 - **Frontend Framework**: Next.js 14 (App Router), React 18, TypeScript.
 - **Styling & Theme**: Tailwind CSS (Custom dark charcoal `#0F172A`, emerald accents `#10B981`, amber warnings `#F59E0B`), Lucide-React Icons.
@@ -70,7 +70,7 @@ $$\text{Water Savings \%} = (0.40 \cdot S) \cdot 100$$
 
 ---
 
-## 📁 Directory Structure
+##  Directory Structure
 
 ```
 c:\Users\hp\OneDrive\Desktop\Agri\
@@ -115,7 +115,7 @@ c:\Users\hp\OneDrive\Desktop\Agri\
 
 ---
 
-## ⚡ Quickstart Guide
+##  Quickstart Guide
 
 ### 1. Install Dependencies
 ```bash
