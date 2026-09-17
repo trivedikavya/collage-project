@@ -1,3 +1,10 @@
+<img width="1919" height="958" alt="image" src="https://github.com/user-attachments/assets/c6f5166f-a9b6-4485-be31-b4b8bf0609f3" />
+<img width="1898" height="956" alt="image" src="https://github.com/user-attachments/assets/6f016f04-9f6b-4919-8bdf-df2d8eab626c" />
+<img width="1912" height="963" alt="image" src="https://github.com/user-attachments/assets/eb33d6d4-e0e8-4d8c-966a-c52f2e2b57d3" />
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/8e49750f-475b-4514-b0ae-d454f89ef55e" />
+
+
+
 #  Agrivoltaics Micro-Zone Shadow Mapping & Precision Irrigation Engine
 
 > **A full-stack enterprise AgTech web application prototype designed to co-optimize photovoltaic (PV) power generation alongside under-canopy crop microclimates and precision differential irrigation.**
